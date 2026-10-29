@@ -1,0 +1,375 @@
+---
+import Base from '../layouts/Base.astro';
+import Cta from '../components/Cta.astro';
+import FaqList from '../components/FaqList.astro';
+import { AUDIT_DATE, AUDIT_DATE_ISO, docsUrl, serverSpec, taglines } from '../content/site';
+import { faq } from '../content/faq';
+import { faqPage, webPage } from '../lib/schema';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+
+const installFaq = faq.filter((f) =>
+  [
+    'What do I need to run it?',
+    'How long does installing it take?',
+    'I am not technical. Can someone set it up for me?',
+    'Do backups happen automatically?',
+    'What happens if my server cannot reach the licence server?',
+  ].includes(f.q),
+);
+---
+
+<Base
+  title="Install a Self-Hosted Client Portal: ClientOS Setup Guide"
+  description="What installing ClientOS on your own Linux VPS actually involves: server size, one A record, the one-command installer, browser setup, email and payments, and scheduling backups."
+  og="og/install.png"
+  crumbs={[{ label: 'Home', href: `${base}/` }, { label: 'Install guide' }]}
+  schema={[
+    webPage({
+      url: canonical,
+      name: 'ClientOS install guide summary',
+      description:
+        'A summary of what installing a self-hosted ClientOS involves, with links to the official documentation.',
+      modified: AUDIT_DATE_ISO,
+    }),
+    faqPage(installFaq),
+  ]}
+>
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Install guide</p>
+      <h1>What self-hosting actually involves</h1>
+      <p class="lede">
+        A summary of the real work, in order, so you can judge it before you buy anything. The
+        official documentation is the authority and every section below links to the page it
+        summarises — this page exists to show you the shape of the job, including the parts that are
+        work.
+      </p>
+      <p class="meta" style="margin-top:1.25rem">{taglines[0]}</p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href={docsUrl('install_hero')} rel="noopener">
+          Official ClientOS docs
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>1. A server</h2>
+      <p>
+        Any Linux VPS with a public IPv4 address. A fresh one is best, and it must not already be
+        running nginx or Apache, because ClientOS brings its own web server and needs ports 80 and
+        443. The docs name Hetzner, DigitalOcean, Vultr, Linode and AWS Lightsail; any provider
+        works.
+      </p>
+      <div class="table-scroll" style="margin-top:1.25rem">
+        <table>
+          <caption>
+            Server requirements from
+            <a href={docsUrl('install_spec', '/installation')} rel="noopener">
+              getclientos.com/docs/installation</a>, checked {AUDIT_DATE}.
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Resource</th>
+              <th scope="col">Minimum</th>
+              <th scope="col">Recommended</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              serverSpec.map((s) => (
+                <tr>
+                  <th scope="row">{s.resource}</th>
+                  <td>{s.min}</td>
+                  <td>{s.rec}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+      <p class="meta">
+        The installer checks memory and disk before it starts and stops with a clear message if the
+        server is too small; below 2 GB it refuses, and on a small server it adds a 4 GB swap file.
+        The docs call a 2 vCPU, 4 GB server "comfortable for a typical agency".
+      </p>
+    </div>
+  </section>
+
+  <section class="section-raised">
+    <div class="wrap">
+      <h2>2. One DNS record, added first</h2>
+      <p>
+        ClientOS runs on <strong>one domain</strong> — say <code>clients.youragency.com</code> — with
+        the client portal at <code>/</code>, the admin at <code>/admin</code> and the API at
+        <code>/v1</code>. It needs a single <strong>A record</strong> pointing that name at your
+        server’s IP address.
+      </p>
+      <pre><code>{`Type   Name      Value          TTL
+A      clients   203.0.113.5    Auto (or 300)`}</code></pre>
+      <p>Three things the docs are specific about, each of which will otherwise cost you an hour:</p>
+      <ul class="checks">
+        <li>
+          <strong>Add it before you install.</strong> The installer checks the record against public
+          DNS and against your actual server before it downloads anything.
+        </li>
+        <li>
+          <strong>On Cloudflare, set it to DNS only</strong> — the grey cloud. Let’s Encrypt has to
+          reach your server directly for the first certificate, and the orange-cloud proxy blocks
+          that. You can turn the proxy on afterwards.
+        </li>
+        <li>
+          <strong>Delete a stale AAAA record</strong> on that name unless it is your server’s own
+          IPv6 address. Let’s Encrypt tries IPv6 first, and a wrong AAAA record stops the
+          certificate.
+        </li>
+      </ul>
+      <p>
+        The domain has to be public, must not already be serving a website, and <strong
+          >your licence binds to it</strong
+        > — a key can change domain three times in its life, so pick the one you mean to keep.
+      </p>
+      <div class="btn-row">
+        <a class="btn btn-secondary" href={docsUrl('install_dns', '/domain')} rel="noopener">
+          Domain and DNS docs
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>3. One command</h2>
+      <p>
+        Your licence page at vibemonk.com gives you an install command with your key already in it.
+        SSH into the server, paste it, press enter.
+      </p>
+      <pre><code>{`$ ssh root@YOUR_SERVER_IP
+$ curl -fsSL https://license.vibemonk.com/v1/licensing/install/clientos \\
+    | sudo bash -s -- --license-key CLOS-XXXX-XXXX-XXXX-XXXX`}</code></pre>
+      <p>It checks your key, downloads the installer and verifies its fingerprint, unpacks it to
+        <code>/opt/clientos</code>, installs Docker if it is missing, adds swap on a small server,
+        and writes your configuration with freshly generated passwords. Then it prints a link to
+        finish in the browser.
+      </p>
+      <p>
+        If you would rather not pipe a script into bash, the same installer is downloadable as a
+        <code>.tar.gz</code> from your licence page — upload it, unpack it, run
+        <code>sudo ./install.sh --license-key …</code>. Both paths run exactly the same checks. For a
+        provisioning script, add <code>--domain</code>, <code>--email</code> and <code>--yes</code> to
+        skip the browser step without skipping the checks.
+      </p>
+      <div class="note">
+        <p>
+          <strong>One constraint worth knowing early:</strong> ClientOS installs only on a server
+          your domain reaches over the internet. Before anything downloads, the licence server
+          checks from outside that your domain answers on that machine — so a laptop, a home network
+          or an unpointed domain cannot install it.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-raised">
+    <div class="wrap">
+      <h2>4. Finish in the browser</h2>
+      <p>
+        Open the link the terminal printed, enter your domain and an email address for certificate
+        renewal warnings, and press Connect. The licence server verifies your domain from the
+        internet and binds your key to it; only then is ClientOS downloaded, with every file checked
+        against its fingerprint. HTTPS takes a minute or two, then your browser moves on to the setup
+        page by itself.
+      </p>
+      <p>
+        The setup page at <code>/admin/setup</code> is guarded by a <strong>setup key</strong> the
+        installer printed — it stops a stranger who finds your fresh server from claiming it first.
+        If you lose it, <code>sudo clientos setup-key</code> shows it again. Seven steps: welcome,
+        licence, your agency, region (currency and timezone), two brand colours, your owner account
+        (password at least 12 characters), review. About two minutes.
+      </p>
+      <p class="meta">
+        Once anyone on your team has signed in, setup closes for good. There is also a command-line
+        route to create the owner, which refuses to run after any staff member has signed in, so it
+        cannot be used as a back door later.
+      </p>
+      <div class="btn-row">
+        <a class="btn btn-secondary" href={docsUrl('install_firstrun', '/first-run')} rel="noopener">
+          First-run docs
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>5. Connect email, then everything else</h2>
+      <p>
+        This is where the time actually goes. The docs put first run at 20 to 40 minutes, most of it
+        spent in your email provider’s dashboard adding SPF and DKIM records, and they give the order
+        for a reason:
+      </p>
+      <ol class="steps" style="margin-top:1.5rem">
+        <li>
+          <span class="step-n">01</span>
+          <h3>Email, first</h3>
+          <p>
+            Resend, or any SMTP server — Google Workspace, Microsoft 365, Zoho, Amazon SES. There is
+            no fallback: until one is connected, sign-in codes, invitations and notifications cannot
+            be sent.
+          </p>
+        </li>
+        <li>
+          <span class="step-n">02</span>
+          <h3>Sender and a test</h3>
+          <p>
+            Set the sender name and an address on the domain you verified, then send a test to your
+            own inbox before you trust it.
+          </p>
+        </li>
+        <li>
+          <span class="step-n">03</span>
+          <h3>File storage</h3>
+          <p>
+            Already working on your server. If you would rather keep files in a Cloudflare R2 bucket,
+            decide now — before anything is uploaded — because existing files have to be copied over
+            by hand.
+          </p>
+        </li>
+        <li>
+          <span class="step-n">04</span>
+          <h3>Turnstile</h3>
+          <p>
+            Optional but recommended. Cloudflare Turnstile protects your public signup and free
+            checkout pages from bots.
+          </p>
+        </li>
+        <li>
+          <span class="step-n">05</span>
+          <h3>Payments, test keys first</h3>
+          <p>
+            Connect Stripe, PayPal, NOWPayments, CoinGate or BTCPay Server with test keys, make a
+            test purchase, confirm the order and the webhook arrived — then switch to live keys and
+            repeat with a small real payment you refund.
+          </p>
+        </li>
+        <li>
+          <span class="step-n">06</span>
+          <h3>Two-factor, then your team</h3>
+          <p>
+            Turn on 2FA for your own account. Only then invite anyone: an invitation sent before
+            email works never arrives.
+          </p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section-raised">
+    <div class="wrap">
+      <h2>6. Backups — the part you have to do yourself</h2>
+      <p class="lede">
+        If you read one section of this page, read this one. ClientOS gives you a one-command backup,
+        but the docs are explicit that <strong>nothing runs it until you schedule it</strong>.
+      </p>
+      <pre><code>{`$ sudo clientos backup
+# writes three files into backups/ and keeps the newest seven of each:
+#   db-DATE.dump       your whole database
+#   files-DATE.tar.gz  every file stored on the server
+#   env-DATE           deploy/.env, including CREDENTIAL_SECRET
+
+# then schedule it — daily at 03:00:
+$ echo '0 3 * * * root /usr/local/bin/clientos backup >/var/log/clientos-backup.log 2>&1' \\
+    | sudo tee /etc/cron.d/clientos-backup`}</code></pre>
+      <ul class="checks">
+        <li>
+          <strong>Copy the folder off the server.</strong> A backup on the same disk is lost with the
+          disk. Another server, your own machine, or a bucket via rclone — and keep the copies
+          private, because the <code>env</code> files hold your secrets.
+        </li>
+        <li>
+          <strong>Restore one before your first real client goes in</strong>, and again every few
+          months. The docs put it well: a backup you have never restored is a hope, not a backup.
+        </li>
+        <li>
+          <strong>Check that recent files exist.</strong> A backup job that silently stopped weeks
+          ago is the most common failure.
+        </li>
+        <li>
+          <strong>If you move files to Cloudflare R2</strong>, <code>clientos backup</code> no longer
+          covers them and the bucket needs backing up separately.
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Living with it: the clientos command</h2>
+      <div class="table-scroll" style="margin-top:1.25rem">
+        <table>
+          <caption>
+            From
+            <a href={docsUrl('install_ops', '/operations')} rel="noopener">
+              getclientos.com/docs/operations</a>, checked {AUDIT_DATE}. Run with sudo.
+          </caption>
+          <thead>
+            <tr><th scope="col">Command</th><th scope="col">What it does</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row"><code>clientos status</code></th><td>The version, what is running and whether it is healthy</td></tr>
+            <tr><th scope="row"><code>clientos update</code></th><td>Takes a backup, downloads the newest release your licence covers, restarts. Migrations run before the new API starts</td></tr>
+            <tr><th scope="row"><code>clientos rollback</code></th><td>Back to the release before the last update, once</td></tr>
+            <tr><th scope="row"><code>clientos backup</code></th><td>Database, files and settings into <code>backups/</code></td></tr>
+            <tr><th scope="row"><code>clientos restore FILE…</code></th><td>Puts a backup back; asks you to type <code>restore</code> to confirm</td></tr>
+            <tr><th scope="row"><code>clientos logs [service]</code></th><td>Follows the logs, of everything or one service</td></tr>
+            <tr><th scope="row"><code>clientos domain NEW</code></th><td>Moves ClientOS, and your licence, to another domain</td></tr>
+            <tr><th scope="row"><code>clientos setup-key</code></th><td>Shows the setup page’s key again</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        Updates also run from the admin at Settings → License → Updates, and the docs note that the
+        admin never gets root access for this — it leaves a request that a small service on the
+        server picks up. A release that changes existing data will say so in its notes and wants
+        <code>clientos update --stop-first</code>, which costs about a minute of downtime instead of
+        the old version writing old-style data into the new database.
+      </p>
+      <p>
+        Point an uptime monitor at <code>https://YOUR_DOMAIN/v1/health</code>: it returns 200 with
+        PostgreSQL and Redis reported, and 503 when the database cannot be reached. Docker restarts a
+        container whose process crashes, but not one that is running and unhealthy.
+      </p>
+    </div>
+  </section>
+
+  <section class="section-raised">
+    <div class="wrap wrap-narrow">
+      <h2>Install questions</h2>
+      <FaqList items={installFaq} />
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="note">
+        <p>
+          <strong>This page is a summary, written {AUDIT_DATE}.</strong> The
+          <a href={docsUrl('install_footer')} rel="noopener">official ClientOS documentation</a> is
+          the authority and is kept current — follow it, not this, when you actually install. If the
+          two ever disagree, the docs are right and this page is out of date; tell us in a
+          <a href="https://github.com/huelab-byte/tryclientos/issues" rel="noopener">GitHub issue</a>
+          and we will fix it.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <Cta
+    utm="install"
+    heading="Or skip the server and just look at it"
+    body="The instant demo emails you a login to a live, fully installed ClientOS with sample clients, orders and invoices. Read-only, 3 days, no call and no card."
+  />
+</Base>

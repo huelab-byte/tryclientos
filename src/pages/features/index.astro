@@ -1,0 +1,123 @@
+---
+import Base from '../../layouts/Base.astro';
+import Cta from '../../components/Cta.astro';
+import {
+  AUDIT_DATE,
+  byTheNumbers,
+  featureScope,
+  features,
+  officialUrl,
+  taglines,
+} from '../../content/site';
+import { itemList, softwareApplication } from '../../lib/schema';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const origin = Astro.site!.origin;
+---
+
+<Base
+  title="ClientOS Features: Self-Hosted Client Portal for Agencies"
+  description="Store, checkout, orders, delivery, messages, help desk, invoicing, finance, growth tools, white-label and security — the 12 areas of ClientOS, grouped into eight feature pages."
+  og="og/features.png"
+  crumbs={[{ label: 'Home', href: `${base}/` }, { label: 'Features' }]}
+  schema={[
+    softwareApplication(canonical),
+    itemList(
+      'ClientOS feature areas',
+      features.map((f) => ({ name: f.nav, url: `${origin}${base}/features/${f.slug}/` })),
+    ),
+  ]}
+>
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Features</p>
+      <h1>Everything an agency runs on, in one portal you own</h1>
+      <p class="lede">
+        getclientos.com publishes {featureScope}. This is that list grouped into the eight areas
+        that actually decide a portal purchase. Every page names which numbered areas of the
+        official feature list it summarises, so you can check any claim at the source.
+      </p>
+      <p class="meta" style="margin-top:1.25rem">
+        {taglines[2]} · Facts checked {AUDIT_DATE} against
+        <a href={officialUrl('features_hub')} rel="noopener">getclientos.com/features</a>.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="grid">
+        {
+          features.map((f) => (
+            <a class="card card-link" href={`${base}/features/${f.slug}/`}>
+              <h3>{f.nav}</h3>
+              <p>{f.lede}</p>
+              <span class="card-more">{f.h1} →</span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section-raised">
+    <div class="wrap">
+      <h2>The counts ClientOS publishes</h2>
+      <ul class="numbers" style="margin-top:1.5rem">
+        {
+          byTheNumbers.map((n) => (
+            <li>
+              <span class="n">{n.value}</span>
+              <span class="l">{n.label}</span>
+              <span class="s">{n.note}</span>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="meta" style="margin-top:1rem">
+        Two of these are checkable in the docs and both add up: the 17 form field types break down
+        into 5 client-profile, 9 project-data and 3 layout fields, and the 7 optional modules are
+        the help desk, messages, coupons, subscriptions, forms, traffic tracking and the referral
+        programme. Orders and clients are core and cannot be switched off.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>What ClientOS is not</h2>
+      <p class="lede">
+        Worth knowing before you spend a week evaluating it. None of this is a criticism — it is
+        what the vendor itself states, or does not state, and all of it is easier to find out now
+        than after you buy.
+      </p>
+      <ul class="checks" style="margin-top:1.25rem">
+        <li>
+          <strong>Not open source.</strong> ClientOS ships as ready-built, SHA-256-verified Docker
+          images with a one-command installer. The source code is not provided; custom work is
+          quoted.
+        </li>
+        <li>
+          <strong>Not multilingual.</strong> The interface is in English. You can rename the words
+          your clients read — menu labels and headings — but there is no second interface language.
+        </li>
+        <li>
+          <strong>Not managed hosting.</strong> You own the VPS, and the docs are explicit that
+          nothing runs your backups until you schedule them. On Premium and Custom the ClientOS
+          team installs it for you, but the server stays yours.
+        </li>
+        <li>
+          <strong>No published API reference.</strong> The API runs on your own domain at
+          <code>/v1</code> as part of the product, but no public API documentation is published.
+        </li>
+        <li>
+          <strong>No trial of the licence.</strong> The demo is read-only, loaded with sample data
+          and lasts 3 days; the product itself is a purchase.
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <Cta utm="features_hub" />
+</Base>

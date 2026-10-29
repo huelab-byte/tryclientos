@@ -1,0 +1,386 @@
+---
+/**
+ * The /…-alternative comparison pages, at the root so the slug reads as the
+ * search query does: /wayfront-spp-alternative/, /zendo-alternative/,
+ * /agency-handy-alternative/.
+ *
+ * Only these three slugs are generated — getStaticPaths comes from
+ * content/alternatives.ts, so this route never shadows a real page.
+ */
+import Base from '../layouts/Base.astro';
+import Cta from '../components/Cta.astro';
+import {
+  AUDIT_DATE,
+  AUDIT_DATE_ISO,
+  demoUrl,
+  officialUrl,
+  packages,
+  pricingFacts,
+  taglines,
+} from '../content/site';
+import { alternatives } from '../content/alternatives';
+import { softwareApplication, webPage } from '../lib/schema';
+
+export function getStaticPaths() {
+  return alternatives.map((alt) => ({
+    params: { slug: alt.slug },
+    props: { alt },
+  }));
+}
+
+const { alt } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+
+const tagline = taglines[alternatives.indexOf(alt) % taglines.length];
+const others = alternatives.filter((a) => a.slug !== alt.slug);
+
+/** Three years of their subscription against one licence. */
+const years = alt.arithmetic
+  ? [1, 2, 3].map((y) => ({
+      year: y,
+      them: alt.arithmetic!.theirYearly * y,
+      ours: alt.arithmetic!.ours.price,
+    }))
+  : [];
+const saving = alt.arithmetic
+  ? alt.arithmetic.theirYearly * 3 - alt.arithmetic.ours.price
+  : 0;
+const money = (n: number) => `$${n.toLocaleString('en-US')}`;
+---
+
+<Base
+  title={alt.title}
+  description={alt.description}
+  og={`og/${alt.slug}.png`}
+  crumbs={[
+    { label: 'Home', href: `${base}/` },
+    { label: 'Alternatives', href: `${base}/alternatives/` },
+    { label: `${alt.product} alternative` },
+  ]}
+  schema={[
+    webPage({
+      url: canonical,
+      name: alt.h1,
+      description: alt.description,
+      modified: AUDIT_DATE_ISO,
+    }),
+    softwareApplication(canonical),
+  ]}
+>
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow">ClientOS vs {alt.product}</p>
+      <h1>{alt.h1}</h1>
+      <p class="lede">{alt.lede}</p>
+      <p class="meta" style="margin-top:1.25rem">{tagline}</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="note">
+        {
+          alt.verified ? (
+            <p>
+              <strong>Where the numbers come from.</strong> Every {alt.product} figure on this page
+              was read off
+              <a href={alt.theirPricingPage!} rel="noopener">{alt.theirPricingPage}</a> on
+              {' '}{alt.checked}. Every ClientOS figure comes from
+              <a href={officialUrl(`alt_${alt.slug}`)} rel="noopener">getclientos.com</a> on the
+              same date. Plans change — check both before you buy. We make ClientOS, so read the
+              "stay where you are" section below as seriously as the rest.
+            </p>
+          ) : (
+            <p>
+              <strong>What we could not check, and will not guess.</strong> On {alt.checked},
+              {' '}{alt.theirSite} refused connections from our network over both HTTPS and HTTP, so
+              we could not read {alt.product}’s own pricing or feature pages. This page therefore
+              makes <em>no claim at all</em> about {alt.product}’s prices, plans, limits or
+              features. It compares the two delivery models, states only ClientOS facts as fact, and
+              sends you to
+              <a href={alt.theirSite} rel="noopener">{alt.theirSite}</a> for theirs. Recorded in
+              <a
+                href="https://github.com/huelab-byte/tryclientos/blob/main/UNVERIFIED.md"
+                rel="noopener">UNVERIFIED.md</a
+              >.
+            </p>
+          )
+        }
+      </div>
+
+      {
+        alt.theirPositioning && (
+          <p>
+            <strong>How {alt.product} describes itself:</strong> “{alt.theirPositioning}” —
+            <a href={alt.theirSite} rel="noopener">{alt.theirSite}</a>, {alt.checked}.
+          </p>
+        )
+      }
+    </div>
+  </section>
+
+  {
+    alt.plans && (
+      <section class="section-raised">
+        <div class="wrap">
+          <h2>{alt.product} pricing, as published</h2>
+          <div class="table-scroll" style="margin-top:1.5rem">
+            <table>
+              <caption>
+                {alt.product} list prices read from
+                <a href={alt.theirPricingPage!} rel="noopener">{alt.theirPricingPage}</a> on
+                {' '}{alt.checked}. Reproduced for comparison; check their page for current terms.
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">Plan</th>
+                  <th scope="col">Price</th>
+                  <th scope="col">What it includes</th>
+                </tr>
+              </thead>
+              <tbody>
+                {alt.plans.map((p) => (
+                  <tr>
+                    <th scope="row">{p.plan}</th>
+                    <td>{p.price}</td>
+                    <td>{p.detail}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <h3>ClientOS pricing, for the same comparison</h3>
+          <div class="table-scroll">
+            <table>
+              <caption>
+                ClientOS licence prices from getclientos.com, checked {AUDIT_DATE}.
+                {' '}{pricingFacts.licenceScope} {pricingFacts.noFees}
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">Package</th>
+                  <th scope="col">Price</th>
+                  <th scope="col">Updates and support</th>
+                </tr>
+              </thead>
+              <tbody>
+                {packages.map((p) => (
+                  <tr>
+                    <th scope="row" class="ours">{p.name}</th>
+                    <td class="ours">{p.price} {p.period === 'contact' ? '' : p.period}</td>
+                    <td class="ours">{p.updates}, {p.support.toLowerCase()}, {p.domains.toLowerCase()}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <section>
+    <div class="wrap">
+      <h2>Side by side</h2>
+      <div class="table-scroll" style="margin-top:1.5rem">
+        <table>
+          <caption>
+            {alt.product} column from their own public pages, {alt.checked}. ClientOS column from
+            getclientos.com and its docs, {AUDIT_DATE}.
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">&nbsp;</th>
+              <th scope="col">{alt.product}</th>
+              <th scope="col" class="ours">ClientOS</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              alt.rows.map((row) => (
+                <tr>
+                  <th scope="row">{row.dimension}</th>
+                  <td>{row.them}</td>
+                  <td class="ours">{row.clientos}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  {
+    alt.arithmetic && (
+      <section class="section-raised">
+        <div class="wrap">
+          <h2>The arithmetic over three years</h2>
+          <p class="lede">{alt.arithmetic.intro}</p>
+          <div class="table-scroll" style="margin-top:1.5rem">
+            <table>
+              <caption>{alt.arithmetic.footnote}</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Cumulative</th>
+                  <th scope="col">{alt.arithmetic.theirLabel}</th>
+                  <th scope="col" class="ours">{alt.arithmetic.ours.label}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {years.map((y) => (
+                  <tr>
+                    <th scope="row">Year {y.year}</th>
+                    <td>{money(y.them)}</td>
+                    <td class="ours">{money(y.ours)}</td>
+                  </tr>
+                ))}
+                <tr>
+                  <th scope="row">Difference after 3 years</th>
+                  <td colspan="2" class="ours">
+                    <strong>{money(saving)}</strong> less with the one-time licence, before your
+                    own server costs
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="meta">
+            Two honest caveats on that number. First, it ignores your VPS, which the ClientOS site
+            puts at about $10 a month — roughly {money(360)} over the same three years. Second, the
+            ClientOS licence stops receiving updates partway through:
+            {' '}{alt.arithmetic.ours.label.includes('Premium')
+              ? 'Premium covers 2 years'
+              : 'Standard covers 12 months'}, after which it keeps running on the version you hold.
+            getclientos.com does not publish a renewal price, so if you want to keep updating, ask
+            them what that costs before you compare.
+          </p>
+        </div>
+      </section>
+    )
+  }
+
+  <section>
+    <div class="wrap">
+      <div class="grid grid-2">
+        <div class="card">
+          <h3>Stay on {alt.product} if…</h3>
+          <ul class="checks" style="margin-top:0.75rem">
+            {alt.stayWithThem.map((item) => <li>{item}</li>)}
+          </ul>
+        </div>
+        <div class="card" style="border-color:var(--accent)">
+          <h3>Look at ClientOS if…</h3>
+          <ul class="checks" style="margin-top:0.75rem">
+            {alt.considerClientOS.map((item) => <li>{item}</li>)}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-raised">
+    <div class="wrap">
+      <h2>What moving actually involves</h2>
+      <p class="lede">
+        This is the part comparison pages usually skip. Here is what getclientos.com states about
+        migration, including the bits that are work.
+      </p>
+      <ol class="steps" style="margin-top:1.5rem">
+        <li>
+          <span class="step-n">01</span>
+          <h3>A server and one DNS record</h3>
+          <p>
+            A Linux VPS with 2–4 GB of memory, and one A record pointing a domain such as
+            clients.youragency.com at it. On Cloudflare the record must be DNS-only while you
+            install.
+          </p>
+        </li>
+        <li>
+          <span class="step-n">02</span>
+          <h3>One command, then the browser</h3>
+          <p>
+            The installer handles Docker, passwords, the download and HTTPS; the docs put it at
+            about 10 minutes. A seven-step setup page follows: agency, region, two brand colours and
+            your owner account.
+          </p>
+        </li>
+        <li>
+          <span class="step-n">03</span>
+          <h3>Connect email and payments</h3>
+          <p>
+            Allow 20–40 minutes, most of it in your email provider adding SPF and DKIM records.
+            Nothing can be emailed until Resend or your SMTP server is connected, so this comes
+            before inviting anyone.
+          </p>
+        </li>
+        <li>
+          <span class="step-n">04</span>
+          <h3>Bring your data over</h3>
+          <p>
+            On Start-up and Standard you import clients from a CSV with column mapping. On Premium
+            and Custom the ClientOS team moves your data, or builds a migration tool for it.
+          </p>
+        </li>
+        <li>
+          <span class="step-n">05</span>
+          <h3>Schedule your own backups</h3>
+          <p>
+            The honest one. <code>clientos backup</code> writes the database, files and settings to
+            a folder, but nothing runs it until you add the cron line — and you should copy that
+            folder off the server.
+          </p>
+        </li>
+      </ol>
+      <div class="btn-row">
+        <a class="btn btn-secondary" href={`${base}/install/`}>The install guide, summarised</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Other comparisons</h2>
+      <div class="grid">
+        {
+          others.map((a) => (
+            <a class="card card-link" href={`${base}/${a.slug}/`}>
+              <h3>ClientOS vs {a.product}</h3>
+              <p>{a.description}</p>
+              <span class="card-more">Read the comparison →</span>
+            </a>
+          ))
+        }
+        <a class="card card-link" href={`${base}/client-portal-software/`}>
+          <h3>The full list</h3>
+          <p>
+            Every client portal we know of for agencies, self-hosted and hosted, listed neutrally
+            and not ranked.
+          </p>
+          <span class="card-more">Browse the list →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <Cta
+    utm={`alt_${alt.slug.replace(/-/g, '_')}`}
+    heading={`See ClientOS before you leave ${alt.product}`}
+    body="The instant demo emails you a login to a live ClientOS with sample clients, orders and invoices — the full agency admin and the client portal. Read-only, 3 days, no call and no card."
+  />
+
+  <section class="section-tight">
+    <div class="wrap wrap-narrow center">
+      <p class="meta">
+        {alt.product} is a trademark of its owner, and this page is not affiliated with or endorsed
+        by them. It is published by the ClientOS team to make an honest comparison possible, and
+        corrections are welcome as a
+        <a href="https://github.com/huelab-byte/tryclientos/issues" rel="noopener">GitHub issue</a>.
+        <a href={demoUrl(`alt_${alt.slug}_footer`)} rel="noopener">Try ClientOS</a> and decide for
+        yourself.
+      </p>
+    </div>
+  </section>
+</Base>

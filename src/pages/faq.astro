@@ -1,0 +1,138 @@
+---
+import Base from '../layouts/Base.astro';
+import Cta from '../components/Cta.astro';
+import FaqList from '../components/FaqList.astro';
+import { AUDIT_DATE, AUDIT_DATE_ISO, officialUrl, site, taglines } from '../content/site';
+import { faq } from '../content/faq';
+import { faqPage, softwareApplication, webPage } from '../lib/schema';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+---
+
+<Base
+  title="ClientOS FAQ: Self-Hosted Client Portal Questions Answered"
+  description="Every question agencies ask about ClientOS: what self-hosted means, what it costs, server requirements, white-label, migration, backups, and whether it is open source."
+  og="og/faq.png"
+  crumbs={[{ label: 'Home', href: `${base}/` }, { label: 'FAQ' }]}
+  schema={[
+    webPage({
+      url: canonical,
+      name: 'ClientOS FAQ',
+      description: 'Questions and answers about the self-hosted ClientOS client portal.',
+      modified: AUDIT_DATE_ISO,
+    }),
+    faqPage(faq),
+    softwareApplication(canonical),
+  ]}
+>
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow">FAQ</p>
+      <h1>{faq.length} questions agencies ask</h1>
+      <p class="lede">
+        Every answer below is a restatement of something getclientos.com or its documentation
+        states, and each one names where to check it. Where the site says nothing on a subject, the
+        answer says that instead of filling the gap.
+      </p>
+      <p class="meta" style="margin-top:1.25rem">{taglines[0]}</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap wrap-narrow">
+      <FaqList items={faq} />
+    </div>
+  </section>
+
+  <section class="section-raised">
+    <div class="wrap">
+      <h2>What getclientos.com does not say</h2>
+      <p class="lede">
+        A fair FAQ has to include the questions it cannot answer. These were all looked for on
+        {AUDIT_DATE} and are not published anywhere on the official site — so this one does not
+        answer them either. Ask the ClientOS team directly if any of them decide your purchase.
+      </p>
+      <ul class="checks" style="margin-top:1.25rem">
+        <li>
+          <strong>What renewing updates costs.</strong> The site says ClientOS keeps running on your
+          version and that you can renew for newer releases, but publishes no renewal price.
+        </li>
+        <li>
+          <strong>Whether there is a refund policy.</strong> No refund window or guarantee is
+          stated.
+        </li>
+        <li>
+          <strong>How many agencies run it.</strong> No customer count, revenue figure, rating or
+          review score is published. One named case study is — Dot Mirror, a link building agency —
+          and we treat it as the vendor’s own claim rather than independent proof.
+        </li>
+        <li>
+          <strong>Compliance and certification.</strong> No SOC 2, ISO 27001 or GDPR certification
+          claim, and no data processing agreement, is published. Self-hosting changes who the data
+          controller and processor are, which may be the point for you — but it is a question for
+          your own counsel, not something the site answers.
+        </li>
+        <li>
+          <strong>An uptime SLA.</strong> None is stated, and on a self-hosted product uptime is
+          mostly your server’s, not the vendor’s.
+        </li>
+        <li>
+          <strong>A public API reference.</strong> The API runs on your own domain at
+          <code>/v1</code> as part of the product, but no API documentation is published.
+        </li>
+        <li>
+          <strong>Whether there is a mobile app.</strong> None is mentioned. The docs describe the
+          client portal working on a phone, in a browser.
+        </li>
+      </ul>
+      <p class="meta" style="margin-top:1.25rem">
+        The full list of gaps is in
+        <a href={`${site.repo}/blob/main/UNVERIFIED.md`} rel="noopener">UNVERIFIED.md</a> in this
+        repository, together with the competitor facts we could not check.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Still deciding?</h2>
+      <div class="grid">
+        <a class="card card-link" href={`${base}/pricing/`}>
+          <h3>What it really costs</h3>
+          <p>
+            The four licence prices, plus every other line of the actual bill — server, domain,
+            email, gateway fees — including the ones ClientOS does not charge for.
+          </p>
+          <span class="card-more">Pricing summary →</span>
+        </a>
+        <a class="card card-link" href={`${base}/install/`}>
+          <h3>What self-hosting involves</h3>
+          <p>
+            The real work, in order: server, DNS, the command, browser setup, email, payments — and
+            the backup schedule you have to add yourself.
+          </p>
+          <span class="card-more">Install guide →</span>
+        </a>
+        <a class="card card-link" href={`${base}/alternatives/`}>
+          <h3>How it compares</h3>
+          <p>
+            Against Wayfront, Zendo and Agency Handy, from each vendor’s own published pricing —
+            including who should stay where they are.
+          </p>
+          <span class="card-more">Comparisons →</span>
+        </a>
+        <a class="card card-link" href={officialUrl('faq_official')}>
+          <h3>Ask them directly</h3>
+          <p>
+            The official site’s own FAQ and contact form. A person replies within one working day,
+            with payment details or a demo if you ask for one.
+          </p>
+          <span class="card-more">getclientos.com →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <Cta utm="faq" />
+</Base>

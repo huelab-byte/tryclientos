@@ -1,0 +1,121 @@
+---
+import Base from '../../layouts/Base.astro';
+import Cta from '../../components/Cta.astro';
+import { AUDIT_DATE, AUDIT_DATE_ISO, docsUrl, features, officialUrl, taglines } from '../../content/site';
+import { softwareApplication, webPage } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return features.map((feature) => ({
+    params: { slug: feature.slug },
+    props: { feature },
+  }));
+}
+
+const { feature } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+
+/* Rotate the tagline by position in the feature list, so no two neighbouring
+   pages carry the same one. */
+const tagline = taglines[features.indexOf(feature) % taglines.length];
+
+const others = features.filter((f) => f.slug !== feature.slug);
+---
+
+<Base
+  title={feature.title}
+  description={feature.description}
+  og={`og/feature-${feature.slug}.png`}
+  crumbs={[
+    { label: 'Home', href: `${base}/` },
+    { label: 'Features', href: `${base}/features/` },
+    { label: feature.nav },
+  ]}
+  schema={[
+    webPage({
+      url: canonical,
+      name: feature.h1,
+      description: feature.description,
+      modified: AUDIT_DATE_ISO,
+    }),
+    softwareApplication(canonical),
+  ]}
+>
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow">{feature.nav}</p>
+      <h1>{feature.h1}</h1>
+      <p class="lede">{feature.lede}</p>
+      <p class="meta" style="margin-top:1.25rem">{tagline}</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <ul class="points">
+        {
+          feature.points.map((point) => (
+            <li>
+              <h3>{point.title}</h3>
+              <p>{point.body}</p>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="note" style="margin-top:2.25rem">
+        <p>
+          <strong>Where this comes from.</strong> {feature.area}, read on {AUDIT_DATE}. Check any
+          line of it against
+          <a
+            href={officialUrl(`feature_${feature.slug}`, `/features#${feature.anchor}`)}
+            rel="noopener"
+          >
+            that section of getclientos.com/features
+          </a>
+          or the
+          <a href={docsUrl(`feature_${feature.slug}`, feature.docs)} rel="noopener">
+            official docs for this area</a>. Nothing on this page adds a capability those pages do not state.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-raised">
+    <div class="wrap">
+      <h2>Runs on your own server, either way</h2>
+      <p class="lede">
+        Every feature above runs inside one installation on a Linux VPS you control, on one domain
+        of your own. Clients, orders, messages, invoices and files live in your PostgreSQL database;
+        the only thing that leaves it is a license check-in twice a day carrying the signed license
+        and the version you run. There is no per-seat charge for any of it — the licence is counted
+        per domain, and every package states unlimited clients, staff and orders.
+      </p>
+      <div class="btn-row">
+        <a class="btn btn-secondary" href={`${base}/features/self-hosting-and-install/`}>
+          How the install works
+        </a>
+        <a class="btn btn-secondary" href={`${base}/pricing/`}>What it costs</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>The other feature areas</h2>
+      <div class="grid">
+        {
+          others.map((f) => (
+            <a class="card card-link" href={`${base}/features/${f.slug}/`}>
+              <h3>{f.nav}</h3>
+              <p>{f.description}</p>
+              <span class="card-more">Read more →</span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <Cta utm={`feature_${feature.slug}`} />
+</Base>

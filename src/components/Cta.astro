@@ -1,0 +1,31 @@
+---
+import { demoUrl, docsUrl, demo } from '../content/site';
+
+interface Props {
+  /** Goes into utm_content, so every page's CTA is attributable. */
+  utm: string;
+  heading?: string;
+  body?: string;
+}
+
+const {
+  utm,
+  heading = 'See it working before you decide anything',
+  body = `The instant demo emails you a login to a live ClientOS — ${demo.what}. ${demo.readOnly}. ${demo.duration}. ${demo.cost}`,
+} = Astro.props;
+---
+
+<section class="section-tight">
+  <div class="wrap">
+    <div class="cta-band">
+      <h2>{heading}</h2>
+      <p>{body}</p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href={demoUrl(utm)} rel="noopener">Try the instant demo</a>
+        <a class="btn btn-secondary" href={docsUrl(`${utm}_docs`)} rel="noopener">
+          Read the ClientOS docs
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

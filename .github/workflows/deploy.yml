@@ -1,0 +1,46 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  # Lets you redeploy the current main without pushing an empty commit.
+  workflow_dispatch:
+
+# contents:read to check the repo out; pages + id-token are what
+# actions/deploy-pages needs to publish via OIDC.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deploy at a time. cancel-in-progress is false so a deploy that is already
+# publishing finishes rather than being dropped halfway.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install, build and upload the site
+        uses: withastro/action@v3
+        with:
+          package-manager: pnpm@latest
+          # Node 24: `pnpm prebuild` runs scripts/build-downloads.mjs, which
+          # imports a .ts data module and so needs type stripping on by default.
+          node-version: 24
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

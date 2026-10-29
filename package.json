@@ -1,0 +1,27 @@
+{
+  "name": "tryclientos",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Self-hosted client portals and agency resources — a static Astro site about ClientOS, with a curated client portal list and free agency templates.",
+  "type": "module",
+  "license": "CC0-1.0",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "prebuild": "node scripts/build-downloads.mjs",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "og": "node scripts/generate-og.mjs"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.6.0",
+    "astro": "^5.16.1"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "@resvg/resvg-js": "^2.6.2",
+    "typescript": "^5.9.3"
+  },
+  "packageManager": "pnpm@11.5.3"
+}

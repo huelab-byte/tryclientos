@@ -1,0 +1,100 @@
+---
+import { inlineToHtml, type TemplateBlock } from '../content/templates';
+
+interface Props {
+  blocks: TemplateBlock[];
+}
+const { blocks } = Astro.props;
+---
+
+<div class="prose">
+  {
+    blocks.map((block) => {
+      switch (block.kind) {
+        case 'h2':
+          return <h2>{block.text}</h2>;
+        case 'p':
+          return <p set:html={inlineToHtml(block.text)} />;
+        case 'note':
+          return (
+            <div class="note">
+              <p set:html={inlineToHtml(block.text)} />
+            </div>
+          );
+        case 'checklist':
+          return (
+            <ul class="tpl-check">
+              {block.items.map((i) => (
+                <li set:html={inlineToHtml(i)} />
+              ))}
+            </ul>
+          );
+        case 'bullets':
+          return (
+            <ul>
+              {block.items.map((i) => (
+                <li set:html={inlineToHtml(i)} />
+              ))}
+            </ul>
+          );
+        case 'numbered':
+          return (
+            <ol>
+              {block.items.map((i) => (
+                <li set:html={inlineToHtml(i)} />
+              ))}
+            </ol>
+          );
+        case 'table':
+          return (
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    {block.head.map((h) => (
+                      <th scope="col">{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {block.rows.map((row) => (
+                    <tr>
+                      {row.map((cell) => (
+                        <td>{cell || ' '}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          );
+      }
+    })
+  }
+</div>
+
+<style>
+  /* The one shape the global sheet has no rule for: a checklist that reads as
+     a checklist on the page as well as in the markdown. */
+  .tpl-check {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.1em;
+  }
+  .tpl-check li {
+    position: relative;
+    padding-left: 2rem;
+    margin-bottom: 0.55rem;
+  }
+  .tpl-check li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.3em;
+    width: 1.05rem;
+    height: 1.05rem;
+    border: 1.5px solid var(--line);
+    border-radius: 4px;
+    background: var(--paper);
+  }
+</style>

@@ -1,0 +1,5 @@
+# https://huelab-byte.github.io/tryclientos/
+User-agent: *
+Allow: /
+
+Sitemap: https://huelab-byte.github.io/tryclientos/sitemap-index.xml

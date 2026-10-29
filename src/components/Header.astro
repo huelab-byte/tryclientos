@@ -1,0 +1,43 @@
+---
+import Logo from './Logo.astro';
+import { demoUrl } from '../content/site';
+
+/**
+ * `aria-current="page"` is set by prefix match so a feature page highlights
+ * "Features" and an alternative page highlights "Alternatives".
+ */
+const here = Astro.url.pathname;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const nav = [
+  { href: `${base}/features/`, label: 'Features', match: `${base}/features` },
+  { href: `${base}/pricing/`, label: 'Pricing', match: `${base}/pricing` },
+  { href: `${base}/alternatives/`, label: 'Alternatives', match: null },
+  { href: `${base}/client-portal-software/`, label: 'The list', match: null },
+  { href: `${base}/templates/`, label: 'Templates', match: `${base}/templates` },
+  { href: `${base}/install/`, label: 'Install', match: null },
+  { href: `${base}/faq/`, label: 'FAQ', match: null },
+];
+
+const isCurrent = (item: (typeof nav)[number]) =>
+  here === item.href || (item.match ? here.startsWith(item.match) : false);
+---
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href={`${base}/`}>
+      <Logo />
+      <span>Self-Hosted Client Portals</span>
+    </a>
+    <nav class="nav" aria-label="Main">
+      {
+        nav.map((item) => (
+          <a href={item.href} aria-current={isCurrent(item) ? 'page' : undefined}>
+            {item.label}
+          </a>
+        ))
+      }
+      <a class="btn btn-primary btn-sm" href={demoUrl('header')} rel="noopener">Try the demo</a>
+    </nav>
+  </div>
+</header>

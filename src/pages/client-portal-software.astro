@@ -1,0 +1,182 @@
+---
+/**
+ * The awesome list, rendered. This is the repo's original content — the same
+ * entries the README carries, from content/list.ts so the two cannot drift.
+ */
+import Base from '../layouts/Base.astro';
+import Cta from '../components/Cta.astro';
+import { AUDIT_DATE, AUDIT_DATE_ISO, site, taglines } from '../content/site';
+import { entryCount, listDisclosure, listIntro, sections } from '../content/list';
+import { itemList, webPage } from '../lib/schema';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+
+const allEntries = sections.flatMap((s) => s.entries.map((e) => ({ name: e.name, url: e.url })));
+---
+
+<Base
+  title="Client Portal Software for Agencies: Self-Hosted & White Label"
+  description="A curated, neutral list of client portal software for agencies: self-hosted and hosted white-label portals, Wayfront (SPP) alternatives, plus onboarding, proposal, invoicing and reporting tools."
+  og="og/client-portal-software.png"
+  crumbs={[{ label: 'Home', href: `${base}/` }, { label: 'Client portal software' }]}
+  schema={[
+    webPage({
+      url: canonical,
+      name: 'Client portal software for agencies',
+      description: listIntro,
+      modified: AUDIT_DATE_ISO,
+    }),
+    itemList('Client portal software and agency tools', allEntries),
+  ]}
+>
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow">The curated list</p>
+      <h1>Client portal software for agencies</h1>
+      <p class="lede">{listIntro}</p>
+      <p class="meta" style="margin-top:1.25rem">
+        {entryCount} tools across {sections.length} sections · {taglines[2]} ·
+        <a href={site.repo} rel="noopener">Contribute on GitHub</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="wrap">
+      <div class="note">
+        <p>{listDisclosure}</p>
+      </div>
+      <nav aria-label="Sections">
+        <ul class="toc">
+          {sections.map((s) => <li><a href={`#${s.id}`}>{s.title}</a></li>)}
+          <li><a href="#templates">Free templates</a></li>
+          <li><a href="#what-self-hosted-means">What "self-hosted" means</a></li>
+        </ul>
+      </nav>
+    </div>
+  </section>
+
+  {
+    sections.map((section, i) => (
+      <section class={i % 2 === 1 ? 'section-raised section-tight' : 'section-tight'} id={section.id}>
+        <div class="wrap">
+          <h2>{section.title}</h2>
+          {section.intro && <p class="lede" style="margin-bottom:0.75rem">{section.intro}</p>}
+          <ul class="entries">
+            {section.entries.map((entry) => (
+              <li>
+                <a class="entry-name" href={entry.url} rel="noopener">
+                  {entry.name}
+                </a>
+                {' — '}
+                {entry.blurb}
+                {entry.extra && (
+                  <>
+                    {' '}
+                    <a href={entry.extra.url} rel="noopener">{entry.extra.label}</a>.
+                  </>
+                )}
+                {entry.disclosure && <span class="disclosure">{entry.disclosure}</span>}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    ))
+  }
+
+  <section id="what-self-hosted-means">
+    <div class="wrap">
+      <h2>What "self-hosted" means, and what it does not</h2>
+      <p class="lede">
+        The word gets used loosely, and the distinction matters when you are choosing from the list
+        above.
+      </p>
+      <div class="grid grid-2" style="margin-top:1.5rem">
+        <div class="card">
+          <h3>Self-hosted</h3>
+          <p>
+            The software runs on a server you rent or own. The database, the files and the client
+            records are in your infrastructure, and the vendor cannot read them. You are responsible
+            for the server, the updates and the backups — which is the trade.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Open source</h3>
+          <p>
+            The source code is published under a licence that lets you read, modify and redistribute
+            it. Self-hosted software is often open source, but not always — and open source hosted
+            for you by the vendor is not self-hosted.
+          </p>
+        </div>
+        <div class="card">
+          <h3>White label</h3>
+          <p>
+            The product carries your brand rather than the vendor’s. This is a branding feature, not
+            a hosting one: plenty of hosted SaaS is fully white-label, and some of it charges extra
+            to remove a "powered by" badge.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Where ClientOS sits</h3>
+          <p>
+            Self-hosted and white-label, but <strong>not open source</strong>: it ships as
+            ready-built, SHA-256-verified Docker images with a one-command installer, and the source
+            code is not provided. If an open-source licence is a hard requirement, ClientOS is not
+            your answer and we would rather you knew that now.
+          </p>
+        </div>
+      </div>
+      <p class="meta" style="margin-top:1.25rem">
+        If you came here searching for an open source client portal on GitHub: this repository is
+        the list, not the software. ClientOS itself is a commercial, self-hosted product. The list
+        above does include genuinely open-source tools where they fit a section — Cal.com for
+        scheduling and DocuSeal for signatures, both self-hostable.
+      </p>
+    </div>
+  </section>
+
+  <section class="section-raised" id="templates">
+    <div class="wrap">
+      <h2>Free agency templates in this repo</h2>
+      <p class="lede">
+        Four vendor-neutral templates, released under CC0 — use them with any portal on this page,
+        or with none.
+      </p>
+      <div class="btn-row">
+        <a class="btn btn-secondary" href={`${base}/templates/`}>Browse the templates</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Adding to the list</h2>
+      <p>
+        Open a pull request. One tool per PR, in the right section, described in one neutral
+        sentence with no superlatives. It has to be live and publicly available, and if you work for
+        it or are affiliated with it, say so in the PR — that is the whole review standard, and it is
+        the same one the ClientOS entry above is held to.
+      </p>
+      <div class="btn-row">
+        <a class="btn btn-secondary" href={`${site.repo}/blob/main/CONTRIBUTING.md`} rel="noopener">
+          Contributing guidelines
+        </a>
+        <a class="btn btn-secondary" href={`${site.repo}/issues`} rel="noopener">
+          Report a dead link
+        </a>
+      </div>
+      <p class="meta" style="margin-top:1.25rem">
+        All links checked {AUDIT_DATE}. Descriptions are our own summaries of what each vendor says
+        about itself; none is quoted as a factual claim beyond that.
+      </p>
+    </div>
+  </section>
+
+  <Cta
+    utm="list"
+    heading="The self-hosted entry on that list, in detail"
+    body="ClientOS is the self-hosted, white-label option above. The instant demo emails you a login to a live one with sample data — read-only, 3 days, no call and no card."
+  />
+</Base>

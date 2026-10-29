@@ -1,0 +1,6 @@
+# pnpm 11 reads build-script approval from here, not from package.json.
+# esbuild and sharp are Astro's own native dependencies; without this, a fresh
+# `pnpm install` (including the one in CI) stops with ERR_PNPM_IGNORED_BUILDS.
+allowBuilds:
+  esbuild: true
+  sharp: true

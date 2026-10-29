@@ -1,0 +1,188 @@
+---
+import Base from '../layouts/Base.astro';
+import Cta from '../components/Cta.astro';
+import { AUDIT_DATE, AUDIT_DATE_ISO, officialUrl, taglines } from '../content/site';
+import { alternatives } from '../content/alternatives';
+import { itemList, webPage } from '../lib/schema';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const origin = Astro.site!.origin;
+---
+
+<Base
+  title="Client Portal Alternatives for Agencies: Self-Hosted vs Hosted"
+  description="Honest comparisons of ClientOS against Wayfront (Service Provider Pro), Zendo and Agency Handy — built from each vendor's own published pricing, with the date each was checked."
+  og="og/alternatives.png"
+  crumbs={[{ label: 'Home', href: `${base}/` }, { label: 'Alternatives' }]}
+  schema={[
+    webPage({
+      url: canonical,
+      name: 'Client portal alternatives for agencies',
+      description:
+        'Comparisons of ClientOS against hosted client portals for productized service agencies.',
+      modified: AUDIT_DATE_ISO,
+    }),
+    itemList(
+      'Client portal comparisons',
+      alternatives.map((a) => ({
+        name: `${a.product} alternative`,
+        url: `${origin}${base}/${a.slug}/`,
+      })),
+    ),
+  ]}
+>
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Alternatives</p>
+      <h1>Hosted client portal, or one you own?</h1>
+      <p class="lede">
+        Every portal on this page does roughly the same job: a storefront for your services, a place
+        for clients to order and talk to you, and invoices at the end. They split on one structural
+        question — whose server it runs on — and the pricing model follows from that.
+      </p>
+      <p class="meta" style="margin-top:1.25rem">{taglines[1]}</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="note">
+        <p>
+          <strong>How these comparisons are built, and why you can check them.</strong> We make
+          ClientOS, so we are not a neutral party and we are not pretending to be. What we can do is
+          show our working: every competitor number is read off that competitor’s own public pricing
+          page, with the date it was read, and every ClientOS claim comes from getclientos.com or
+          its docs. Each page also names the agencies that should stay where they are. Where a
+          vendor’s pages could not be reached, we say so and make no claim at all rather than
+          guessing — see
+          <a href="https://github.com/huelab-byte/tryclientos/blob/main/UNVERIFIED.md" rel="noopener">
+            UNVERIFIED.md</a>.
+        </p>
+      </div>
+
+      <div class="grid" style="margin-top:1.75rem">
+        {
+          alternatives.map((a) => (
+            <a class="card card-link" href={`${base}/${a.slug}/`}>
+              <h3>ClientOS vs {a.product}</h3>
+              <p>{a.description}</p>
+              <span class="card-more">
+                {a.verified
+                  ? `Pricing checked ${a.checked} →`
+                  : 'Model comparison — their terms unverified →'}
+              </span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section-raised">
+    <div class="wrap">
+      <h2>The structural difference, in one table</h2>
+      <p class="lede">
+        This is the part that is true of every hosted portal versus every self-hosted one, whichever
+        two products you are comparing.
+      </p>
+      <div class="table-scroll" style="margin-top:1.5rem">
+        <table>
+          <caption>
+            Hosted subscription portals versus ClientOS self-hosted. ClientOS column from
+            getclientos.com, checked {AUDIT_DATE}. The hosted column describes the model, not any
+            one vendor — see the individual pages for named, dated prices.
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">&nbsp;</th>
+              <th scope="col">Hosted portal subscription</th>
+              <th scope="col" class="ours">ClientOS, self-hosted</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">What you pay for</th>
+              <td>A monthly plan that grows with seats, clients or features</td>
+              <td class="ours">One licence, paid once, plus a server from about $10 a month</td>
+            </tr>
+            <tr>
+              <th scope="row">Where client data lives</th>
+              <td>On the vendor’s servers, under their terms</td>
+              <td class="ours">In your own PostgreSQL database, on your server</td>
+            </tr>
+            <tr>
+              <th scope="row">Who can read it</th>
+              <td>You, the vendor’s staff and their subprocessors</td>
+              <td class="ours">Only the people you give an account to</td>
+            </tr>
+            <tr>
+              <th scope="row">Who runs the server</th>
+              <td>They do — nothing for you to patch, monitor or back up</td>
+              <td class="ours">
+                You do. One command installs and updates it, but the VPS and the backup schedule
+                are yours
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Payments</th>
+              <td>Gateways and any cut depend on the vendor and the plan</td>
+              <td class="ours">
+                Straight to your Stripe, PayPal or crypto account; ClientOS takes no cut
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Branding</th>
+              <td>Their domain or a paid add-on, and often their name somewhere</td>
+              <td class="ours">Your domains, logos, colours, words and emails on every package</td>
+            </tr>
+            <tr>
+              <th scope="row">Leaving</th>
+              <td>Export what they let you, then lose the rest</td>
+              <td class="ours">
+                The database and files are already yours; one command dumps all of it
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Source code</th>
+              <td>Not provided</td>
+              <td class="ours">
+                Not provided either — verified Docker images, so self-hosted but not open source
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="meta">
+        The framing in this table is ClientOS’s own, from the "Why self-hosted" section of
+        <a href={officialUrl('alternatives_hub', '/#own-it')} rel="noopener">
+          getclientos.com</a>; the two rows about running the server and about source code are added here because
+        that section does not state them and a buyer should know both.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>When a hosted portal is the right answer</h2>
+      <p class="lede">
+        Self-hosting is not free — it costs you a server to own and a backup schedule to remember.
+        Stay on a hosted portal if any of these are true:
+      </p>
+      <ul class="checks" style="margin-top:1.25rem">
+        <li>Nobody on your team wants to own a Linux VPS, and you would rather pay to never think about it.</li>
+        <li>You need the portal in a language other than English — ClientOS states its interface is English only.</li>
+        <li>You want to use the real product free before committing; ClientOS sells a licence and its demo is read-only for 3 days.</li>
+        <li>You are one or two people, where a cheap per-seat plan beats a licence.</li>
+        <li>You depend on an integration ClientOS does not list, such as Zapier, Make, Slack or SEO reporting.</li>
+      </ul>
+      <p style="margin-top:1.25rem">
+        The curated
+        <a href={`${base}/client-portal-software/`}>list of client portal software</a> has the hosted
+        options, listed neutrally and without ranking.
+      </p>
+    </div>
+  </section>
+
+  <Cta utm="alternatives_hub" />
+</Base>

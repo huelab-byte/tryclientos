@@ -1,0 +1,25 @@
+---
+import type { FaqItem } from '../content/faq';
+
+interface Props {
+  items: FaqItem[];
+  /** Show the "where to check this" line under each answer. */
+  showSources?: boolean;
+}
+
+const { items, showSources = true } = Astro.props;
+---
+
+<div class="faq">
+  {
+    items.map((item, i) => (
+      <details open={i === 0}>
+        <summary>{item.q}</summary>
+        <div class="answer">
+          <p>{item.a}</p>
+          {showSources && <p class="meta">Source: {item.source}.</p>}
+        </div>
+      </details>
+    ))
+  }
+</div>

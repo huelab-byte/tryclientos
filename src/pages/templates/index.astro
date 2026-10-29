@@ -1,0 +1,122 @@
+---
+import Base from '../../layouts/Base.astro';
+import Cta from '../../components/Cta.astro';
+import { AUDIT_DATE_ISO, site, taglines } from '../../content/site';
+import { templates } from '../../content/templates';
+import { itemList, webPage } from '../../lib/schema';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const origin = Astro.site!.origin;
+---
+
+<Base
+  title="Free Agency Templates: Onboarding, Kickoff, SOP, Reporting"
+  description="Four free, vendor-neutral templates for service agencies: a client onboarding checklist, a kickoff questionnaire, a client communication SOP and a monthly report outline. CC0."
+  og="og/templates.png"
+  crumbs={[{ label: 'Home', href: `${base}/` }, { label: 'Templates' }]}
+  schema={[
+    webPage({
+      url: canonical,
+      name: 'Free agency templates',
+      description:
+        'Four free CC0 templates for service agencies: client onboarding, project kickoff, communication SOP and monthly reporting.',
+      modified: AUDIT_DATE_ISO,
+    }),
+    itemList(
+      'Free agency templates',
+      templates.map((t) => ({ name: t.h1, url: `${origin}${base}/templates/${t.slug}/` })),
+    ),
+  ]}
+>
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Free templates</p>
+      <h1>Four templates that stop work from stalling</h1>
+      <p class="lede">
+        The documents an agency needs in the first week of a client relationship and at the end of
+        every month. Vendor-neutral, written to be edited, and released under CC0 — use them with
+        any client portal, or with none, and republish them if you like.
+      </p>
+      <p class="meta" style="margin-top:1.25rem">
+        {taglines[2]} · No email required ·
+        <a href={`${site.repo}/tree/main/templates`} rel="noopener">Source on GitHub</a>
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="grid grid-2">
+        {
+          templates.map((t) => (
+            <div class="card">
+              <h3>{t.h1}</h3>
+              <p>{t.lede}</p>
+              <div class="btn-row" style="margin-top:1.1rem">
+                <a class="btn btn-secondary btn-sm" href={`${base}/templates/${t.slug}/`}>
+                  Read it
+                </a>
+                <a
+                  class="btn btn-secondary btn-sm"
+                  href={`${base}/downloads/${t.file}`}
+                  download={t.file}
+                >
+                  Download .md
+                </a>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section-raised">
+    <div class="wrap">
+      <h2>How to use them</h2>
+      <p class="lede">
+        These are not meant to be filed. Each one is written to be pasted into whatever your team
+        already works in — a portal checklist, a project template, an intake form, a wiki page — and
+        then cut down to the lines your service actually needs. A checklist nobody ticks stops being
+        read within a month.
+      </p>
+      <p>
+        If you run ClientOS, three of the four map onto something it already has: the onboarding
+        checklist onto a per-service checklist that attaches itself to new orders, the kickoff
+        questionnaire onto the requirements form a client answers right after paying, and the monthly
+        report onto the client report it writes every month. The communication SOP stays a document
+        wherever you work, because it is about people rather than software.
+      </p>
+      <div class="btn-row">
+        <a class="btn btn-secondary" href={`${base}/features/orders-and-delivery/`}>
+          Checklists and briefs in ClientOS
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Licence</h2>
+      <p>
+        Released under
+        <a href="https://creativecommons.org/publicdomain/zero/1.0/" rel="noopener">CC0 1.0</a> — to
+        the extent possible under law, the contributors have waived all copyright in them. Use them
+        commercially, change them, put your own logo on them, sell the service you deliver with
+        them. No attribution required, though a link back is always welcome.
+      </p>
+      <p>
+        <strong>Disclosure:</strong> these are published by the ClientOS team. They are deliberately
+        tool-agnostic and there is no sign-up wall — if you never look at ClientOS, the templates
+        still work.
+      </p>
+    </div>
+  </section>
+
+  <Cta
+    utm="templates"
+    heading="Where these templates live inside a portal"
+    body="In ClientOS, the onboarding checklist becomes a per-service checklist on every new order and the kickoff questionnaire becomes the brief a client fills in right after paying. The instant demo shows both with sample data — read-only, 3 days, no card."
+  />
+</Base>

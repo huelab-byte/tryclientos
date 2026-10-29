@@ -1,0 +1,349 @@
+---
+import Base from '../layouts/Base.astro';
+import Cta from '../components/Cta.astro';
+import FaqList from '../components/FaqList.astro';
+import {
+  AUDIT_DATE,
+  byTheNumbers,
+  demoUrl,
+  docsUrl,
+  features,
+  inEveryPackage,
+  integrations,
+  officialUrl,
+  packages,
+  pricingFacts,
+  shortDescription,
+  stack,
+  taglines,
+  workflow,
+} from '../content/site';
+import { faq } from '../content/faq';
+import { alternatives } from '../content/alternatives';
+import { faqPage, softwareApplication } from '../lib/schema';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+
+/* Tagline 1 — the site's own headline — belongs on the home page. */
+const tagline = taglines[0];
+
+/* Only the broadly-asked questions here; /faq/ carries all of them. */
+const homeFaq = faq.filter((f) =>
+  [
+    'What does self-hosted mean in practice?',
+    'How much does ClientOS cost?',
+    'What do I need to run it?',
+    'Is it really white-label?',
+    'Do I get the source code? Is ClientOS open source?',
+    'Can I try it before buying?',
+  ].includes(f.q),
+);
+---
+
+<Base
+  title="Self-Hosted Client Portal for Agencies — ClientOS"
+  description="ClientOS is a self-hosted, white-label client portal for service agencies: sell, get paid, deliver and invoice on your own server. One-time license from $490, no monthly fee."
+  og="og/default.png"
+  crumbs={[{ label: 'Home' }]}
+  schema={[softwareApplication(canonical), faqPage(homeFaq)]}
+>
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Self-hosted · The client portal for agencies</p>
+      <h1>{tagline}</h1>
+      <p class="lede">
+        Sell services, take payment, deliver work, invoice and support clients from one portal
+        under your brand — installed on a server you control with one command. Your clients’ data
+        stays with you.
+      </p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href={demoUrl('home_hero')} rel="noopener">
+          Try the instant demo
+        </a>
+        <a class="btn btn-secondary" href={`${base}/pricing/`}>See pricing</a>
+      </div>
+      <ul class="hero-points">
+        <li>Runs on your own server</li>
+        <li>Client data never leaves it</li>
+        <li>One-time license, no per-seat fees</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Own your client portal, instead of renting it</h2>
+      <p class="lede">
+        {shortDescription}
+      </p>
+      <div class="grid grid-2" style="margin-top:1.75rem">
+        <div class="card">
+          <h3>Your server, your database</h3>
+          <p>
+            Every client, order, message, invoice and file lives in a PostgreSQL database on a
+            Linux VPS you rent and control. The only thing that leaves it is a license check-in
+            twice a day, carrying the signed license and the version you run — no client, order or
+            invoice data.
+          </p>
+        </div>
+        <div class="card">
+          <h3>One licence, not a subscription</h3>
+          <p>
+            {pricingFacts.licenceScope} {pricingFacts.noFees} Your only running cost is the server,
+            which getclientos.com puts at {pricingFacts.serverCost}. When your updates end, ClientOS
+            keeps working on the version you hold.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Your brand, nowhere near ours</h3>
+          <p>
+            Your domain, five logo slots and two brand colours that repaint the portal, the admin,
+            the sign-in screen, your emails and your invoices. Rename the words clients read.
+            Clients never see the name ClientOS.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Payments straight to you</h3>
+          <p>
+            Stripe, PayPal, NOWPayments, CoinGate, your own BTCPay Server, manual crypto wallets
+            and account credit. Money goes to your accounts and ClientOS takes no cut of it.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-raised">
+    <div class="wrap">
+      <p class="eyebrow">How it works</p>
+      <h2>From first click to final invoice</h2>
+      <p class="lede" style="margin-bottom:1.75rem">
+        ClientOS follows an order the whole way, so nothing falls between tools.
+      </p>
+      <ol class="steps">
+        {
+          workflow.map((step) => (
+            <li>
+              <span class="step-n">{step.n}</span>
+              <h3>{step.title}</h3>
+              <p>{step.body}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="eyebrow">Features</p>
+      <h2>Everything an agency runs on, in one portal you own</h2>
+      <p class="lede" style="margin-bottom:1.75rem">
+        getclientos.com documents 12 areas and 78 features. Here they are grouped into the eight
+        that matter when you are choosing a portal — each page says which areas of the official
+        feature list it summarises.
+      </p>
+      <div class="grid">
+        {
+          features.map((f) => (
+            <a class="card card-link" href={`${base}/features/${f.slug}/`}>
+              <h3>{f.nav}</h3>
+              <p>{f.description}</p>
+              <span class="card-more">Read about {f.nav.toLowerCase()} →</span>
+            </a>
+          ))
+        }
+      </div>
+      <div class="btn-row">
+        <a class="btn btn-secondary" href={`${base}/features/`}>All features, one page</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-raised">
+    <div class="wrap">
+      <p class="eyebrow">By the numbers</p>
+      <h2>Deep where agencies need depth</h2>
+      <ul class="numbers" style="margin-top:1.5rem">
+        {
+          byTheNumbers.map((n) => (
+            <li>
+              <span class="n">{n.value}</span>
+              <span class="l">{n.label}</span>
+              <span class="s">{n.note}</span>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="meta" style="margin-top:1rem">
+        Counts as published on
+        <a href={officialUrl('home_numbers')} rel="noopener">getclientos.com</a>, checked
+        {AUDIT_DATE}.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="eyebrow">Installation</p>
+      <h2>Self-hosting without the server headache</h2>
+      <p class="lede">
+        No Docker files to write, no environment variables to fill in, no proxy to configure. One A
+        record points your domain at a Linux VPS, one command installs everything, and you finish
+        in the browser.
+      </p>
+      <pre><code>{`# one A record:  clients.youragency.com  →  your server's IP
+
+$ sudo ./install.sh
+==> Checking the server      2 CPU, 3911 MB memory, 74 GB free disk
+==> Checking your license    available to this key
+==> Checking DNS             clients.youragency.com → 203.0.113.24
+==> Writing deploy/.env      secrets generated
+==> Downloading ClientOS     every file checked by SHA-256
+==> Starting                 the API is up
+✓ ClientOS is running.       https://clients.youragency.com/admin/setup`}</code></pre>
+      <p>
+        After that it is one command each: <code>clientos update</code> backs up, downloads the new
+        release and restarts; <code>clientos rollback</code> goes back one release;
+        <code>clientos backup</code> writes the database, files and settings into a folder you can
+        copy anywhere.
+      </p>
+      <div class="note">
+        <p>
+          <strong>One thing to plan for:</strong> the ClientOS docs are explicit that nothing runs
+          your backups until you schedule them. Their operations page gives a cron line for a daily
+          03:00 backup, and tells you to copy the folder off the server — a backup on the same disk
+          is lost with the disk.
+        </p>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn-secondary" href={`${base}/install/`}>Install guide summary</a>
+        <a class="btn btn-secondary" href={docsUrl('home_install', '/installation')} rel="noopener">
+          Official installation docs
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-raised">
+    <div class="wrap">
+      <p class="eyebrow">Pricing</p>
+      <h2>Pay once. Own it.</h2>
+      <p class="lede" style="margin-bottom:1.75rem">
+        {pricingFacts.licenceScope} {pricingFacts.noFees}
+      </p>
+      <div class="plans">
+        {
+          packages.map((p) => (
+            <div class={p.highlight ? 'plan plan-featured' : 'plan'}>
+              {p.note && <span class="plan-badge">{p.note}</span>}
+              <h3>{p.name}</h3>
+              <p class="price">{p.price}</p>
+              <p class="per">{p.period === 'contact' ? 'contact for a quote' : p.period}</p>
+              <ul>
+                <li>{p.updates}</li>
+                <li>{p.support}</li>
+                <li>{p.domains}</li>
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+      <h3 style="margin-top:2rem">In every package</h3>
+      <ul class="checks">
+        {inEveryPackage.map((item) => <li>{item}</li>)}
+      </ul>
+      <div class="btn-row">
+        <a class="btn btn-secondary" href={`${base}/pricing/`}>Full pricing summary</a>
+        <a class="btn btn-secondary" href={officialUrl('home_pricing', '/#pricing')} rel="noopener">
+          Official pricing page
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="eyebrow">Compared with hosted portals</p>
+      <h2>Switching from a subscription portal</h2>
+      <p class="lede" style="margin-bottom:1.5rem">
+        Hosted portals are quick to start and get more expensive the longer you stay and the more
+        people you hire. These comparisons are built from each vendor’s own published pricing, with
+        the date each one was checked — and each says plainly who should stay where they are.
+      </p>
+      <div class="grid">
+        {
+          alternatives.map((a) => (
+            <a class="card card-link" href={`${base}/${a.slug}/`}>
+              <h3>{a.product} alternative</h3>
+              <p>{a.description}</p>
+              <span class="card-more">Compare with ClientOS →</span>
+            </a>
+          ))
+        }
+        <a class="card card-link" href={`${base}/client-portal-software/`}>
+          <h3>The whole landscape</h3>
+          <p>
+            A curated, neutral list of self-hosted and hosted client portals for agencies, plus the
+            onboarding, proposal, invoicing and reporting tools around them.
+          </p>
+          <span class="card-more">Browse the list →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-raised">
+    <div class="wrap">
+      <p class="eyebrow">Technology</p>
+      <h2>Production-grade, packaged for one server</h2>
+      <p class="lede">
+        The same stack modern SaaS runs on, assembled so that it installs on a single VPS and
+        updates with one command.
+      </p>
+      <div class="table-scroll" style="margin-top:1.5rem">
+        <table>
+          <caption>
+            Stack as published on getclientos.com/features and its docs introduction, checked {
+              AUDIT_DATE
+            }.
+          </caption>
+          <thead>
+            <tr><th scope="col">Component</th><th scope="col">What it does</th></tr>
+          </thead>
+          <tbody>
+            {
+              stack.map((s) => (
+                <tr>
+                  <th scope="row">{s.name}</th>
+                  <td>{s.role}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+      <h3>Connects to</h3>
+      <p>{integrations.join(' · ')}</p>
+      <p class="meta">
+        Releases are verified by SHA-256 before they install. ClientOS is self-hosted but
+        <strong>not open source</strong> — it ships as ready-built Docker images, and the source
+        code is not provided.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap wrap-narrow">
+      <p class="eyebrow">FAQ</p>
+      <h2>The questions agencies ask first</h2>
+      <FaqList items={homeFaq} />
+      <div class="btn-row">
+        <a class="btn btn-secondary" href={`${base}/faq/`}>All {faq.length} questions</a>
+      </div>
+    </div>
+  </section>
+
+  <Cta utm="home_footer" />
+</Base>

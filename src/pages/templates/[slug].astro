@@ -1,0 +1,107 @@
+---
+import Base from '../../layouts/Base.astro';
+import Cta from '../../components/Cta.astro';
+import TemplateBody from '../../components/TemplateBody.astro';
+import { site } from '../../content/site';
+import { templates } from '../../content/templates';
+import { howToTemplate } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return templates.map((template) => ({
+    params: { slug: template.slug },
+    props: { template },
+  }));
+}
+
+const { template } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const download = new URL(`${base}/downloads/${template.file}`, Astro.site).href;
+
+const others = templates.filter((t) => t.slug !== template.slug);
+---
+
+<Base
+  title={template.title}
+  description={template.description}
+  og={`og/template-${template.slug}.png`}
+  crumbs={[
+    { label: 'Home', href: `${base}/` },
+    { label: 'Templates', href: `${base}/templates/` },
+    { label: template.nav },
+  ]}
+  schema={[
+    howToTemplate({
+      url: canonical,
+      name: template.h1,
+      description: template.description,
+      download,
+    }),
+  ]}
+>
+  <section class="hero">
+    <div class="wrap wrap-narrow">
+      <p class="eyebrow">Free template · CC0</p>
+      <h1>{template.h1}</h1>
+      <p class="lede">{template.lede}</p>
+      <div class="btn-row">
+        <a
+          class="btn btn-primary"
+          href={`${base}/downloads/${template.file}`}
+          download={template.file}
+        >
+          Download the markdown
+        </a>
+        <a
+          class="btn btn-secondary"
+          href={`${site.repo}/blob/main/templates/${template.file}`}
+          rel="noopener"
+        >
+          View on GitHub
+        </a>
+      </div>
+      <p class="meta" style="margin-top:1rem">No email, no sign-up, no attribution required.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap wrap-narrow">
+      <div class="note">
+        <p><strong>How to use it.</strong> {template.howToUse}</p>
+      </div>
+      <hr />
+      <TemplateBody blocks={template.blocks} />
+    </div>
+  </section>
+
+  <section class="section-raised">
+    <div class="wrap wrap-narrow">
+      <h2>Licence</h2>
+      <p>
+        Released under
+        <a href="https://creativecommons.org/publicdomain/zero/1.0/" rel="noopener">CC0 1.0</a>.
+        Change it, rebrand it, republish it, charge for the service you deliver with it. Published by
+        the ClientOS team and deliberately tool-agnostic.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>The other three templates</h2>
+      <div class="grid">
+        {
+          others.map((t) => (
+            <a class="card card-link" href={`${base}/templates/${t.slug}/`}>
+              <h3>{t.nav}</h3>
+              <p>{t.lede}</p>
+              <span class="card-more">Read it →</span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <Cta utm={`template_${template.slug.replace(/-/g, '_')}`} />
+</Base>

@@ -1,0 +1,91 @@
+---
+import { site, demoUrl, docsUrl, officialUrl, AUDIT_DATE } from '../content/site';
+import { features } from '../content/site';
+import { alternatives } from '../content/alternatives';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-cols">
+      <div>
+        <h2>ClientOS</h2>
+        <ul>
+          <li><a href={`${base}/`}>Self-hosted client portal</a></li>
+          <li><a href={`${base}/features/`}>All features</a></li>
+          <li><a href={`${base}/pricing/`}>Pricing</a></li>
+          <li><a href={`${base}/install/`}>Install guide</a></li>
+          <li><a href={`${base}/faq/`}>FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Features</h2>
+        <ul>
+          {
+            features
+              .slice(0, 5)
+              .map((f) => (
+                <li>
+                  <a href={`${base}/features/${f.slug}/`}>{f.nav}</a>
+                </li>
+              ))
+          }
+        </ul>
+      </div>
+      <div>
+        <h2>Alternatives</h2>
+        <ul>
+          <li><a href={`${base}/alternatives/`}>Compare them all</a></li>
+          {
+            alternatives.map((a) => (
+              <li>
+                <a href={`${base}/${a.slug}/`}>{a.product} alternative</a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div>
+        <h2>Free resources</h2>
+        <ul>
+          <li><a href={`${base}/client-portal-software/`}>The curated list</a></li>
+          <li><a href={`${base}/templates/`}>Agency templates</a></li>
+          <li><a href={site.repo} rel="noopener">This site on GitHub</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Official</h2>
+        <ul>
+          <li><a href={officialUrl('footer')} rel="noopener">getclientos.com</a></li>
+          <li><a href={docsUrl('footer')} rel="noopener">ClientOS docs</a></li>
+          <li><a href={demoUrl('footer')} rel="noopener">Instant demo</a></li>
+          <li><a href="https://vibemonk.com" rel="noopener">Vibemonk</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>
+        <strong>Disclosure:</strong> this site is maintained by {site.maintainer}. ClientOS is our
+        own product, so treat our description of it as the vendor’s own. Every ClientOS claim here
+        is taken from
+        <a href={officialUrl('footer_disclosure')} rel="noopener">getclientos.com</a> or its docs;
+        every competitor claim comes from that competitor’s own public pages, with the date it was
+        checked. Nothing on this page is a paid placement, and no listing is an endorsement.
+      </p>
+      <p>
+        Facts last checked {AUDIT_DATE}. Prices and plans change — verify current terms with each
+        vendor before buying. See
+        <a href={`${site.repo}/blob/main/AUDIT.md`} rel="noopener">AUDIT.md</a> for sources and
+        <a href={`${site.repo}/blob/main/UNVERIFIED.md`} rel="noopener">UNVERIFIED.md</a> for what
+        we could not confirm.
+      </p>
+      <p>
+        © {year} ClientOS, a Vibemonk product. Site content released under
+        <a href={`${site.repo}/blob/main/LICENSE`} rel="noopener">CC0 1.0</a>.
+      </p>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,211 @@
+---
+import Base from '../layouts/Base.astro';
+import Cta from '../components/Cta.astro';
+import FaqList from '../components/FaqList.astro';
+import {
+  AUDIT_DATE,
+  AUDIT_DATE_ISO,
+  inEveryPackage,
+  officialUrl,
+  packages,
+  pricingFacts,
+  taglines,
+} from '../content/site';
+import { faq } from '../content/faq';
+import { faqPage, softwareApplication, webPage } from '../lib/schema';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+
+const pricingFaq = faq.filter((f) =>
+  [
+    'How much does ClientOS cost?',
+    'What happens when my updates run out?',
+    'How many clients and staff can I have?',
+    'Can I try it before buying?',
+    'Can I move over from my current client portal?',
+  ].includes(f.q),
+);
+---
+
+<Base
+  title="ClientOS Pricing: One-Time Licence From $490, No Monthly Fee"
+  description="ClientOS pricing summary: Start-up $490, Standard $990, Premium $1,790 one-time, or a quoted Custom package. One licence per domain, unlimited staff, no per-seat fees."
+  og="og/pricing.png"
+  crumbs={[{ label: 'Home', href: `${base}/` }, { label: 'Pricing' }]}
+  schema={[
+    webPage({
+      url: canonical,
+      name: 'ClientOS pricing summary',
+      description:
+        'A summary of ClientOS licence pricing as published on getclientos.com, checked 29 October 2026.',
+      modified: AUDIT_DATE_ISO,
+    }),
+    softwareApplication(canonical),
+    faqPage(pricingFaq),
+  ]}
+>
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Pricing</p>
+      <h1>Pay once. Own it.</h1>
+      <p class="lede">
+        {pricingFacts.licenceScope} {pricingFacts.noFees} Your only running cost is the server,
+        which getclientos.com puts at {pricingFacts.serverCost}.
+      </p>
+      <p class="meta" style="margin-top:1.25rem">
+        {taglines[1]}
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="note">
+        <p>
+          <strong>This is a summary, not the order form.</strong> These are the four packages as
+          published on getclientos.com on {AUDIT_DATE}, reproduced here so you can compare them with
+          a subscription. Buy, and check the current numbers, on the
+          <a href={officialUrl('pricing_official', '/#pricing')} rel="noopener">
+            official pricing page</a>.
+        </p>
+      </div>
+
+      <div class="plans" style="margin-top:1.75rem">
+        {
+          packages.map((p) => (
+            <div class={p.highlight ? 'plan plan-featured' : 'plan'}>
+              {p.note && <span class="plan-badge">{p.note}</span>}
+              <h3>{p.name}</h3>
+              <p class="price">{p.price}</p>
+              <p class="per">{p.period === 'contact' ? 'contact for a quote' : p.period}</p>
+              <ul>
+                <li>{p.updates}</li>
+                <li>{p.support}</li>
+                <li>{p.domains}</li>
+                <li>{p.migration}</li>
+              </ul>
+              <p class="per plan-cta" style="margin:0">{p.install}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section-raised">
+    <div class="wrap">
+      <h2>In every package</h2>
+      <ul class="checks">
+        {inEveryPackage.map((item) => <li>{item}</li>)}
+      </ul>
+      <p class="meta">{pricingFacts.extraDomains}</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>What the real total looks like</h2>
+      <p class="lede">
+        A one-time licence is not the whole bill, and it would be dishonest to present it as one.
+        Here is everything you actually pay for, including the parts ClientOS does not charge for.
+      </p>
+      <div class="table-scroll" style="margin-top:1.5rem">
+        <table>
+          <caption>
+            Cost of running a self-hosted ClientOS. Licence prices and the server estimate are from
+            getclientos.com, checked {AUDIT_DATE}; third-party costs depend on your own accounts and
+            are not set by ClientOS.
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">What</th>
+              <th scope="col">Cost</th>
+              <th scope="col">Paid to</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">The ClientOS licence</th>
+              <td>$490, $990 or $1,790 once, or quoted</td>
+              <td>ClientOS (Vibemonk), once per domain</td>
+            </tr>
+            <tr>
+              <th scope="row">A Linux VPS</th>
+              <td>From about $10 a month</td>
+              <td>Your host — Hetzner, DigitalOcean, Vultr, Linode and AWS Lightsail are named in the docs</td>
+            </tr>
+            <tr>
+              <th scope="row">A domain</th>
+              <td>Whatever you already pay</td>
+              <td>Your registrar. ClientOS needs one A record on a domain you control</td>
+            </tr>
+            <tr>
+              <th scope="row">Email sending</th>
+              <td>Your own plan</td>
+              <td>Resend, or any SMTP provider you already use. Required — nothing can be emailed until it is connected</td>
+            </tr>
+            <tr>
+              <th scope="row">Payment processing</th>
+              <td>Your gateway’s own fees</td>
+              <td>Stripe, PayPal or your crypto gateway. ClientOS takes no cut on top</td>
+            </tr>
+            <tr>
+              <th scope="row">File storage beyond your disk</th>
+              <td>Optional</td>
+              <td>Cloudflare R2, if you would rather not keep files on the server</td>
+            </tr>
+            <tr>
+              <th scope="row">Staff seats</th>
+              <td class="ours">None</td>
+              <td class="ours">Nobody. Every package states unlimited clients, staff and orders</td>
+            </tr>
+            <tr>
+              <th scope="row">HTTPS certificates</th>
+              <td class="ours">None</td>
+              <td class="ours">Let’s Encrypt, issued and renewed by Caddy automatically</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note">
+        <p>
+          <strong>One asterisk worth reading.</strong> Updates are time-limited on every package
+          except Custom: 3 months on Start-up, 12 on Standard, 2 years on Premium. getclientos.com
+          states that when they end, ClientOS keeps running on the version you have and you can
+          renew for newer releases — but it does not publish a renewal price. If long-term update
+          costs matter to your decision, ask them before you buy.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-raised">
+    <div class="wrap">
+      <h2>How a one-time licence compares with a subscription</h2>
+      <p class="lede">
+        The comparison only means anything over time, and it depends entirely on your team size and
+        which plan you would otherwise be on. Each comparison page below does the arithmetic from
+        both vendors’ own published list prices and shows its working.
+      </p>
+      <div class="btn-row">
+        <a class="btn btn-secondary" href={`${base}/wayfront-spp-alternative/`}>vs Wayfront (SPP)</a>
+        <a class="btn btn-secondary" href={`${base}/zendo-alternative/`}>vs Zendo</a>
+        <a class="btn btn-secondary" href={`${base}/alternatives/`}>All comparisons</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap wrap-narrow">
+      <h2>Pricing questions</h2>
+      <FaqList items={pricingFaq} />
+    </div>
+  </section>
+
+  <Cta
+    utm="pricing"
+    heading="Try it before you spend anything"
+    body="The instant demo emails you a login to a live ClientOS with sample clients, orders and invoices. Read-only, 3 days, no call and no card."
+  />
+</Base>
