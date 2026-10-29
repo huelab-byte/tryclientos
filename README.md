@@ -675,7 +675,7 @@ Corrections are the point.
 | `src/lib/schema.ts` | JSON-LD builders: `SoftwareApplication`, `FAQPage`, `BreadcrumbList`, `ItemList`, `WebPage` |
 | `templates/` | The four free agency templates as markdown, **generated** from `src/content/templates.ts` |
 | `public/og/` | One branded 1200×630 social card per page, **generated** by `pnpm og` |
-| `public/fonts/` | General Sans, the ClientOS display face |
+| `src/assets/fonts/` | General Sans, the ClientOS display face, bundled by Vite under the right base |
 | `public/screens/`, `public/video/` | Product screenshots and the showreel, used by both the site and this README |
 | `scripts/` | The three build scripts (below) |
 | `AUDIT.md` | The full source audit of getclientos.com and the two reachable competitors |
@@ -717,17 +717,25 @@ pnpm build && node scripts/check-links.mjs
 
 ### Deploy
 
-GitHub Actions publishes to GitHub Pages on every push to `main`
-([`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)), using `withastro/action` and
-`actions/deploy-pages`.
+The same code deploys to two hosts. [`deploy-target.mjs`](deploy-target.mjs) decides the origin and
+the base path once, and the Astro config and the link checker both read it:
 
-**One-time setup:** in the repository, go to **Settings → Pages** and set **Source** to **GitHub
-Actions**. Without that, the workflow builds and then fails at the deploy step.
+| Host | URL | Base | How it is picked |
+|---|---|---|---|
+| GitHub Pages | `https://huelab-byte.github.io/tryclientos/` | `/tryclientos` | the default |
+| Vercel | `https://<project>.vercel.app/` | `/` | Vercel sets `VERCEL=1` during its build |
 
-The site is configured for `https://huelab-byte.github.io/tryclientos/`, with
-`site: 'https://huelab-byte.github.io'` plus `base: '/tryclientos'` in [`astro.config.mjs`](astro.config.mjs).
-If you fork it, change both, and the `/tryclientos` paths in the three `@font-face` rules at the top of
-`src/styles/global.css`.
+Two optional environment variables override either: `SITE_URL` (the origin, e.g. a custom domain) and
+`BASE_PATH` (e.g. `/`). `SITE_URL` is also what canonicals and the sitemap point at, so set it to the
+same host on both deployments to tell search engines which copy is the original.
+
+**GitHub Pages.** GitHub Actions builds and publishes on every push to `main`
+([`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)). One-time setup: in the repository,
+go to **Settings → Pages** and set **Source** to **GitHub Actions**. Without that, the workflow builds
+and then fails at the deploy step with `HttpError: Not Found`.
+
+**Vercel.** Import the repository; the Astro preset needs no changes (build `pnpm build`, output
+`dist`). Nothing else is required.
 
 </details>
 
@@ -740,7 +748,7 @@ Content in this repository (the list, the templates, the site copy) is released 
 
 - **The ClientOS name, logo, product screenshots and showreel**, which belong to Vibemonk.
 - **The Dot Mirror quote and portrait**, reproduced from the published case study.
-- **General Sans** in `public/fonts/` and `scripts/fonts/`, from
+- **General Sans** in `src/assets/fonts/` and `scripts/fonts/`, from
   [Fontshare](https://www.fontshare.com/fonts/general-sans), under its own license.
 
 Competitor names (Wayfront, Service Provider Pro, Zendo, Agency Handy and every tool in the list) are

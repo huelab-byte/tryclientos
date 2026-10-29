@@ -14,7 +14,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const dist = join(root, 'dist');
-const BASE = '/tryclientos';
+import { base as BASE } from '../deploy-target.mjs';
 
 async function walk(dir) {
   const out = [];
@@ -72,7 +72,7 @@ for (const file of pages) {
   }
   if (!/<h1[ >]/.test(html)) problems.push(`${from}: no <h1>`);
 
-  const og = html.match(/<meta property="og:image" content="[^"]*?(\/tryclientos\/[^"]+)"/);
+  const og = html.match(/<meta property="og:image" content="https?:\/\/[^/"]+([^"]+)"/);
   if (!og) problems.push(`${from}: no og:image`);
   else {
     const target = resolveTarget(og[1]);

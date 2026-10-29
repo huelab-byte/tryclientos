@@ -5,28 +5,27 @@
  * app, which serves the same faces as getclientos.com); body type is the
  * system UI stack, so there is no second font to download.
  *
- * The font URLs below hard-code `/tryclientos`, the `base` in astro.config.mjs.
- * Files in public/ are served from base verbatim and Vite does not rewrite
- * url() for them, so base lives in exactly these three places and the config.
+ * The font files live in src/assets/fonts/ and are referenced relatively, so
+ * Vite bundles them with hashed names under whichever base the build uses.
  */
 
 @font-face {
   font-family: 'General Sans';
-  src: url('/tryclientos/fonts/GeneralSans-Regular.woff2') format('woff2');
+  src: url('../assets/fonts/GeneralSans-Regular.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: 'General Sans';
-  src: url('/tryclientos/fonts/GeneralSans-Medium.woff2') format('woff2');
+  src: url('../assets/fonts/GeneralSans-Medium.woff2') format('woff2');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: 'General Sans';
-  src: url('/tryclientos/fonts/GeneralSans-Bold.woff2') format('woff2');
+  src: url('../assets/fonts/GeneralSans-Bold.woff2') format('woff2');
   font-weight: 700;
   font-style: normal;
   font-display: swap;

@@ -12,8 +12,6 @@ export const AUDIT_DATE_ISO = '2026-10-29';
 
 export const site = {
   name: 'Self-Hosted Client Portals',
-  origin: 'https://huelab-byte.github.io',
-  base: '/tryclientos',
   repo: 'https://github.com/huelab-byte/tryclientos',
   official: 'https://getclientos.com',
   docs: 'https://getclientos.com/docs',

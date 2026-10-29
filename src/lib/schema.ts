@@ -89,7 +89,7 @@ export function webPage({
     isPartOf: {
       '@type': 'WebSite',
       name: site.name,
-      url: `${site.origin}${site.base}/`,
+      url: new URL(import.meta.env.BASE_URL, import.meta.env.SITE).href,
     },
     publisher: { '@type': 'Organization', name: 'Vibemonk', url: 'https://vibemonk.com' },
   };
