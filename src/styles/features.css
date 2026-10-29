@@ -1,0 +1,628 @@
+/*
+ * The features hub and the eight feature pages. Each feature block sets
+ * --tone-a / --tone-b (from src/lib/feature-style.ts), and everything tinted
+ * below reads those two, so one class serves all eight colours.
+ */
+
+.fx-page section {
+  border-top: 0;
+}
+.fx-section {
+  padding-block: clamp(4rem, 8vw, 6.5rem);
+}
+.fx-raised {
+  background: linear-gradient(180deg, #faf7f5 0%, #f6f7fb 100%);
+}
+.fx-h2 {
+  font-size: clamp(1.85rem, 1.2rem + 2.2vw, 2.75rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+.fx-head {
+  max-width: 46rem;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+.fx-head-center {
+  margin-inline: auto;
+  text-align: center;
+}
+.fx-head-center .lede {
+  margin-inline: auto;
+}
+.fx-grad {
+  background: linear-gradient(92deg, #ff7a3d 0%, #f0569b 38%, #a77bf3 68%, #5ec8c9 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.fx-page .btn svg,
+.fx-more svg {
+  width: 1.05em;
+  height: 1.05em;
+}
+
+/* ------------------------------------------------------------ icon tiles */
+
+.fx-ico {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 14px;
+  color: #fff;
+  background: linear-gradient(135deg, var(--tone-a), var(--tone-b));
+  box-shadow: 0 10px 24px -10px var(--tone-b);
+}
+.fx-ico svg {
+  width: 1.45rem;
+  height: 1.45rem;
+}
+.fx-ico-lg {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 18px;
+}
+.fx-ico-lg svg {
+  width: 1.9rem;
+  height: 1.9rem;
+}
+.fx-ico-sm {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 12px;
+}
+.fx-ico-sm svg {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+/* A soft tile: tinted background, icon in the feature colour. */
+.fx-ico-soft {
+  color: var(--tone-b);
+  background: color-mix(in srgb, var(--tone-a) 14%, #fff);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tone-a) 22%, transparent);
+}
+
+/* ------------------------------------------------------------ dark hero (hub) */
+
+.fx-hero {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: #0b0d14;
+  color: #b6bacb;
+  margin-top: calc(-1 * var(--pull));
+  padding-block: calc(var(--pull) + clamp(3rem, 7vw, 5rem)) clamp(4rem, 9vw, 6.5rem);
+  text-align: center;
+}
+.fx-glow {
+  position: absolute;
+  inset: -20% -10% auto;
+  height: 130%;
+  z-index: -1;
+  background:
+    radial-gradient(38% 45% at 20% 20%, rgba(253, 65, 5, 0.4), transparent 70%),
+    radial-gradient(40% 50% at 82% 15%, rgba(140, 70, 230, 0.36), transparent 70%),
+    radial-gradient(35% 40% at 55% 80%, rgba(94, 200, 201, 0.16), transparent 70%);
+  filter: blur(20px);
+}
+.fx-grid {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(70% 60% at 50% 35%, #000 30%, transparent 75%);
+}
+.fx-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  font-size: 0.875rem;
+  color: #e8e9f0;
+  margin: 0 0 1.5rem;
+}
+.fx-pill svg {
+  width: 1rem;
+  height: 1rem;
+  color: #ff8a57;
+}
+.fx-hero h1 {
+  color: #fff;
+  font-size: clamp(2.4rem, 1.4rem + 4.2vw, 4.5rem);
+  letter-spacing: -0.045em;
+  line-height: 1.04;
+  max-width: 18ch;
+  margin-inline: auto;
+}
+.fx-hero .lede {
+  color: #b6bacb;
+  margin: 1.25rem auto 0;
+  max-width: 42rem;
+}
+.fx-hero .meta {
+  color: #8a8fa6;
+  margin-top: 1rem;
+}
+.fx-hero .meta a {
+  color: #c9ccd8;
+}
+
+.fx-jump {
+  list-style: none;
+  padding: 0;
+  margin: 2.5rem auto 0;
+  max-width: 60rem;
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+}
+.fx-jump a {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+  font-family: var(--display);
+  font-weight: 500;
+  text-decoration: none;
+  text-align: left;
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    transform 0.2s;
+}
+.fx-jump a:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: color-mix(in srgb, var(--tone-a) 60%, transparent);
+  transform: translateY(-2px);
+}
+
+/* ------------------------------------------------------------ feature rows (hub) */
+
+.fx-row {
+  display: grid;
+  gap: clamp(2rem, 5vw, 4.5rem);
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  align-items: center;
+  padding-block: clamp(3rem, 6vw, 5rem);
+  scroll-margin-top: 5rem;
+}
+.fx-row + .fx-row {
+  border-top: 1px solid var(--line-soft);
+}
+.fx-row:nth-child(even) > .fx-row-copy {
+  order: 2;
+}
+.fx-kicker {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-bottom: 1.25rem;
+}
+.fx-kicker span {
+  font: 600 0.8125rem var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--tone-b);
+}
+.fx-row h2 {
+  font-size: clamp(1.6rem, 1.15rem + 1.6vw, 2.3rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+.fx-row-copy > p {
+  color: var(--muted);
+}
+.fx-mini {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0;
+  display: grid;
+  gap: 0.6rem;
+}
+.fx-mini li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 500;
+  color: var(--ink);
+  font-size: 0.975rem;
+}
+.fx-mini .fx-ico {
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 10px;
+}
+.fx-mini .fx-ico svg {
+  width: 1.05rem;
+  height: 1.05rem;
+}
+.fx-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--tone-b);
+}
+.fx-more:hover {
+  color: var(--tone-a);
+}
+.fx-more svg {
+  transition: transform 0.2s;
+}
+.fx-more:hover svg {
+  transform: translateX(3px);
+}
+
+.fx-shot {
+  position: relative;
+  margin: 0;
+}
+.fx-shot::before {
+  content: '';
+  position: absolute;
+  inset: 10% 6% -6%;
+  z-index: -1;
+  border-radius: 40px;
+  background: linear-gradient(135deg, var(--tone-a), var(--tone-b));
+  opacity: 0.35;
+  filter: blur(40px);
+}
+.fx-shot img {
+  display: block;
+  width: 100%;
+  border-radius: 14px;
+  box-shadow:
+    0 0 0 1px rgba(18, 20, 28, 0.06),
+    0 30px 70px -30px rgba(18, 20, 28, 0.5);
+}
+.fx-row .fx-shot {
+  isolation: isolate;
+}
+
+@media (max-width: 56rem) {
+  .fx-row {
+    grid-template-columns: 1fr;
+  }
+  .fx-row:nth-child(even) > .fx-row-copy {
+    order: 0;
+  }
+}
+
+/* ------------------------------------------------------------ dark stats band */
+
+.fx-dark {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: #0b0d14;
+  color: #b6bacb;
+  padding-block: clamp(4rem, 8vw, 6rem);
+}
+.fx-dark h2 {
+  color: #fff;
+}
+.fx-dark .eyebrow {
+  color: #ff8a57;
+}
+.fx-dark .lede {
+  color: #b6bacb;
+}
+.fx-dark-glow {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(40% 50% at 10% 100%, rgba(253, 65, 5, 0.3), transparent 70%),
+    radial-gradient(40% 50% at 90% 0%, rgba(140, 70, 230, 0.3), transparent 70%);
+}
+.fx-stats {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 1px;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.fx-stats li {
+  padding: 1.6rem 1.25rem;
+  background: rgba(11, 13, 20, 0.85);
+  text-align: center;
+}
+.fx-stats b {
+  display: block;
+  font: 700 clamp(2.3rem, 1.8rem + 2vw, 3.2rem) / 1 var(--display);
+  letter-spacing: -0.04em;
+  background: linear-gradient(180deg, #fff 30%, #ff9a6b);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.fx-stats span {
+  display: block;
+  color: #fff;
+  font-weight: 500;
+  margin-top: 0.5rem;
+}
+.fx-stats small {
+  display: block;
+  color: #8a8fa6;
+  font-size: 0.8125rem;
+}
+.fx-dark-meta {
+  text-align: center;
+  font-size: 0.875rem;
+  color: #8a8fa6;
+  max-width: 48rem;
+  margin: 1.25rem auto 0;
+}
+
+.fx-facts {
+  list-style: none;
+  padding: 0;
+  margin: 2rem 0 0;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+}
+.fx-facts li {
+  display: flex;
+  gap: 0.9rem;
+  align-items: flex-start;
+  padding: 1.2rem;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.fx-facts b {
+  display: block;
+  color: #fff;
+  font-family: var(--display);
+  margin-bottom: 0.2rem;
+}
+.fx-facts small {
+  color: #9da2b8;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+.fx-dark .btn-secondary {
+  background: transparent;
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.25);
+}
+.fx-dark .btn-secondary:hover {
+  color: #fff;
+  border-color: #fff;
+}
+
+/* ------------------------------------------------------------ "what it is not" */
+
+.fx-nots {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+}
+.fx-nots li {
+  padding: 1.4rem;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: #fff;
+  font-size: 0.9375rem;
+  color: var(--muted);
+}
+.fx-nots .fx-ico {
+  margin-bottom: 1rem;
+  --tone-a: #8a8fa6;
+  --tone-b: #555c76;
+}
+.fx-nots strong {
+  display: block;
+  color: var(--ink);
+  font-family: var(--display);
+  font-size: 1.1rem;
+  margin-bottom: 0.3rem;
+}
+
+/* ------------------------------------------------------------ feature page hero */
+
+.fx-dhero {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  margin-top: calc(-1 * var(--pull));
+  padding-block: calc(var(--pull) + clamp(2.5rem, 5vw, 4rem)) 0;
+  background:
+    radial-gradient(45% 60% at 85% 0%, color-mix(in srgb, var(--tone-a) 26%, transparent), transparent 70%),
+    radial-gradient(40% 50% at 0% 30%, color-mix(in srgb, var(--tone-b) 12%, transparent), transparent 70%),
+    linear-gradient(180deg, #fff, #f7f8fc);
+}
+.fx-dhero-top {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  max-width: 54rem;
+}
+.fx-dhero .eyebrow {
+  color: var(--tone-b);
+}
+.fx-dhero h1 {
+  font-size: clamp(2.1rem, 1.3rem + 3vw, 3.5rem);
+  letter-spacing: -0.04em;
+  line-height: 1.06;
+}
+.fx-dhero .lede {
+  margin-top: 0.75rem;
+}
+.fx-dhero .btn-row {
+  margin-top: 1.75rem;
+}
+.fx-tagline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.875rem;
+  color: var(--muted);
+  margin-top: 1rem;
+}
+.fx-tagline svg {
+  width: 1rem;
+  height: 1rem;
+  color: var(--tone-b);
+}
+.fx-dhero-shot {
+  margin: clamp(2.5rem, 5vw, 3.5rem) auto 0;
+  max-width: 64rem;
+  isolation: isolate;
+}
+.fx-dhero-shot img {
+  border-radius: 16px 16px 0 0;
+  box-shadow:
+    0 0 0 1px rgba(18, 20, 28, 0.06),
+    0 -20px 80px -30px color-mix(in srgb, var(--tone-b) 60%, transparent);
+}
+.fx-dhero-shot::before {
+  inset: 15% 8% 0;
+}
+@media (max-width: 40rem) {
+  .fx-dhero-top {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ------------------------------------------------------------ points */
+
+.fx-points {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+}
+.fx-points li {
+  position: relative;
+  padding: 1.5rem;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: #fff;
+  transition:
+    transform 0.25s,
+    box-shadow 0.25s,
+    border-color 0.25s;
+}
+.fx-points li:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--tone-a) 45%, transparent);
+  box-shadow: 0 24px 50px -26px color-mix(in srgb, var(--tone-b) 55%, transparent);
+}
+.fx-points .fx-ico {
+  margin-bottom: 1.1rem;
+}
+.fx-points h3 {
+  font-size: 1.125rem;
+  margin-bottom: 0.4rem;
+}
+.fx-points p {
+  font-size: 0.9375rem;
+  color: var(--muted);
+  margin: 0;
+}
+.fx-points li:first-child {
+  background:
+    radial-gradient(90% 90% at 100% 0%, color-mix(in srgb, var(--tone-a) 14%, transparent), transparent 70%),
+    #fff;
+}
+
+.fx-source {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-top: 2.25rem;
+  padding: 1.25rem 1.4rem;
+  border-radius: 16px;
+  border: 1px dashed var(--line);
+  background: var(--raised);
+  font-size: 0.9375rem;
+}
+.fx-source p {
+  margin: 0;
+}
+.fx-source strong {
+  color: var(--ink);
+}
+
+/* ------------------------------------------------------------ split + cards */
+
+.fx-split {
+  display: grid;
+  gap: clamp(2rem, 5vw, 4rem);
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  align-items: center;
+}
+@media (max-width: 56rem) {
+  .fx-split {
+    grid-template-columns: 1fr;
+  }
+}
+
+.fx-cards {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+}
+.fx-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1.4rem;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: inherit;
+  text-decoration: none;
+  transition:
+    transform 0.25s,
+    box-shadow 0.25s,
+    border-color 0.25s;
+}
+.fx-card:hover {
+  color: inherit;
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--tone-a) 50%, transparent);
+  box-shadow: 0 24px 50px -26px color-mix(in srgb, var(--tone-b) 55%, transparent);
+}
+.fx-card .fx-ico {
+  margin-bottom: 1rem;
+}
+.fx-card h3 {
+  font-size: 1.125rem;
+  margin-bottom: 0.35rem;
+}
+.fx-card p {
+  font-size: 0.9375rem;
+  color: var(--muted);
+  margin-bottom: 1rem;
+}
+.fx-card .fx-more {
+  margin-top: auto;
+  font-size: 0.9rem;
+}

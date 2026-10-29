@@ -104,41 +104,41 @@ agency's own domain (`clients.youragency.com` here).
 <table>
 <tr>
 <td width="50%" valign="top">
-<img src=".github/assets/screenshots/orders.webp" alt="Orders list with Chase these briefs">
+<img src="public/screens/orders.webp" alt="Orders list with Chase these briefs">
 <p><b>Orders.</b> Every order shows whose move it is and how long is left. Paid orders still waiting on a brief are listed at the top, ready to chase in one action.</p>
 </td>
 <td width="50%" valign="top">
-<img src=".github/assets/screenshots/order-detail.webp" alt="Order page with brief, conversation and delivery clock">
+<img src="public/screens/order-detail.webp" alt="Order page with brief, conversation and delivery clock">
 <p><b>The order page.</b> The brief, the conversation, the files and the delivery clock in one place, with time spent on your side and the client's.</p>
 </td>
 </tr>
 <tr>
 <td width="50%" valign="top">
-<img src=".github/assets/screenshots/storefront.webp" alt="Service sales page with packages and checkout">
+<img src="public/screens/storefront.webp" alt="Service sales page with packages and checkout">
 <p><b>Your service store.</b> Every service gets its own page on your domain. The buyer picks a package, pays, and the order exists only once payment is confirmed.</p>
 </td>
 <td width="50%" valign="top">
-<img src=".github/assets/screenshots/client-portal.webp" alt="Client portal dashboard">
+<img src="public/screens/client-portal.webp" alt="Client portal dashboard">
 <p><b>The client portal.</b> What your clients see: their orders, what is waiting on them, what is outstanding, all under your name.</p>
 </td>
 </tr>
 <tr>
 <td width="50%" valign="top">
-<img src=".github/assets/screenshots/messages.webp" alt="Messages inbox">
+<img src="public/screens/messages.webp" alt="Messages inbox">
 <p><b>Messages.</b> One conversation per client and per order, plus your team's own channels. Send a priced offer in the thread and the client accepts and pays it in one click.</p>
 </td>
 <td width="50%" valign="top">
-<img src=".github/assets/screenshots/tickets.webp" alt="Help desk ticket queue">
+<img src="public/screens/tickets.webp" alt="Help desk ticket queue">
 <p><b>Help desk.</b> A ticket queue with priority, assignee and first-response targets counted in your business hours only.</p>
 </td>
 </tr>
 <tr>
 <td width="50%" valign="top">
-<img src=".github/assets/screenshots/invoices.webp" alt="Invoices list">
+<img src="public/screens/invoices.webp" alt="Invoices list">
 <p><b>Invoices.</b> Gapless numbering, pay links anyone can use, partial payments, credit notes, and a Chase button for anything overdue.</p>
 </td>
 <td width="50%" valign="top">
-<img src=".github/assets/screenshots/reports.webp" alt="Reports with profit and loss">
+<img src="public/screens/reports.webp" alt="Reports with profit and loss">
 <p><b>Reports.</b> Profit and loss month by month: revenue, item costs, delivery expenses, gross and net profit. Every figure per currency.</p>
 </td>
 </tr>
@@ -150,51 +150,51 @@ agency's own domain (`clients.youragency.com` here).
 <table>
 <tr>
 <td width="50%" valign="top">
-<img src=".github/assets/screenshots/todo.webp" alt="Todo kanban board">
+<img src="public/screens/todo.webp" alt="Todo kanban board">
 <p><b>Task board.</b> Orders, revisions, tickets and payments become cards on their own, with subtasks, owners and due dates.</p>
 </td>
 <td width="50%" valign="top">
-<img src=".github/assets/screenshots/leads.webp" alt="Leads pipeline">
+<img src="public/screens/leads.webp" alt="Leads pipeline">
 <p><b>Leads.</b> A pipeline with the source and value of every lead, fed straight from the forms on your website.</p>
 </td>
 </tr>
 <tr>
 <td width="50%" valign="top">
-<img src=".github/assets/screenshots/service-editor.webp" alt="Service editor with add-ons">
+<img src="public/screens/service-editor.webp" alt="Service editor with add-ons">
 <p><b>Service editor.</b> Packages, add-ons, quantities and five pricing models, with a live preview while you edit.</p>
 </td>
 <td width="50%" valign="top">
-<img src=".github/assets/screenshots/subscriptions.webp" alt="Subscriptions list">
+<img src="public/screens/subscriptions.webp" alt="Subscriptions list">
 <p><b>Subscriptions.</b> Each renewal raises its own invoice and order, with card on file, retries and MRR.</p>
 </td>
 </tr>
 <tr>
 <td width="50%" valign="top">
-<img src=".github/assets/screenshots/invoice.webp" alt="Single invoice">
+<img src="public/screens/invoice.webp" alt="Single invoice">
 <p><b>An invoice.</b> Send it, copy the pay link, download the PDF, or record a payment by hand.</p>
 </td>
 <td width="50%" valign="top">
-<img src=".github/assets/screenshots/ticket-detail.webp" alt="Ticket conversation">
+<img src="public/screens/ticket-detail.webp" alt="Ticket conversation">
 <p><b>A ticket.</b> Reply to the client or add an internal note. Pending pauses the response clock.</p>
 </td>
 </tr>
 <tr>
 <td width="50%" valign="top">
-<img src=".github/assets/screenshots/branding.webp" alt="Company and branding settings">
+<img src="public/screens/branding.webp" alt="Company and branding settings">
 <p><b>Branding.</b> Your company name, address and logos for light and dark backgrounds, used on every surface a client sees.</p>
 </td>
 <td width="50%" valign="top">
-<img src=".github/assets/screenshots/team.webp" alt="Team members with roles and on-time rate">
+<img src="public/screens/team.webp" alt="Team members with roles and on-time rate">
 <p><b>Team.</b> Each member's role, workload and on-time delivery, with 122 permissions and six built-in roles.</p>
 </td>
 </tr>
 <tr>
 <td width="50%" valign="top">
-<img src=".github/assets/screenshots/setup-wizard.webp" alt="Browser setup wizard">
+<img src="public/screens/setup-wizard.webp" alt="Browser setup wizard">
 <p><b>Setup in the browser.</b> Seven short steps: license, agency, region, brand colours and the owner account.</p>
 </td>
 <td width="50%" valign="top">
-<img src=".github/assets/screenshots/install-terminal.webp" alt="One-command installer in a terminal">
+<img src="public/screens/install-terminal.webp" alt="One-command installer in a terminal">
 <p><b>The installer.</b> Checks your license, verifies every file by its fingerprint and sets up Docker for you.</p>
 </td>
 </tr>
@@ -371,7 +371,7 @@ and nothing is deleted.
 
 ## ⚡ Install in one command
 
-<img src=".github/assets/screenshots/install-terminal.webp" alt="The ClientOS installer running in a terminal" width="100%">
+<img src="public/screens/install-terminal.webp" alt="The ClientOS installer running in a terminal" width="100%">
 
 ```bash
 curl -fsSL https://license.vibemonk.com/v1/licensing/install/clientos | sudo bash -s -- --license-key CLOS-XXXX-XXXX-XXXX-XXXX
@@ -451,6 +451,12 @@ sudo clientos backup     # database, files and settings into one folder
 <td>Data migration by the team</td>
 <td>Custom features and integrations</td>
 </tr>
+<tr>
+<td align="center"><a href="https://app.vibemonk.com/services/clientos?package=start-up"><img src="https://img.shields.io/badge/Buy_Start--up-12141c?style=for-the-badge" alt="Buy Start--up"></a></td>
+<td align="center"><a href="https://app.vibemonk.com/services/clientos?package=standard"><img src="https://img.shields.io/badge/Buy_Standard-fd4105?style=for-the-badge" alt="Buy Standard"></a></td>
+<td align="center"><a href="https://app.vibemonk.com/services/clientos?package=premium"><img src="https://img.shields.io/badge/Buy_Premium-12141c?style=for-the-badge" alt="Buy Premium"></a></td>
+<td align="center"><a href="https://getclientos.com/contact?utm_source=github&utm_medium=referral&utm_campaign=clientos_launch&utm_content=readme_pricing_custom"><img src="https://img.shields.io/badge/Ask_for_a_quote-12141c?style=for-the-badge" alt="Ask for a quote"></a></td>
+</tr>
 </table>
 
 **In every package:** the full product (store, orders, messages, billing, tickets, reports) ·
@@ -468,7 +474,7 @@ prices below are from each vendor's own pricing page, checked on **29 October 20
 
 | | **ClientOS** | Wayfront (formerly SPP) | Zendo |
 |:--|:--|:--|:--|
-| **How you pay** | Once: $490 / $990 / $1,790 | $99–$129/mo (Base) · $249–$299/mo (Pro) | $25–$29/mo (Core) · $79–$99/mo (Agency) |
+| **How you pay** | Once: [$490](https://app.vibemonk.com/services/clientos?package=start-up) / [$990](https://app.vibemonk.com/services/clientos?package=standard) / [$1,790](https://app.vibemonk.com/services/clientos?package=premium) | $99–$129/mo (Base) · $249–$299/mo (Pro) | $25–$29/mo (Core) · $79–$99/mo (Agency) |
 | **Seats** | Unlimited staff | 5 on Base, 10 on Pro, then $18–$20 per seat a month | 1 included, then $8–$17 per user a month |
 | **Where your client data lives** | Your own server | The vendor's servers | The vendor's servers |
 | **Crypto payments** | NOWPayments, CoinGate, BTCPay, manual wallets | Not listed | Not listed (Stripe and bank transfer) |
@@ -489,7 +495,7 @@ where they are**:
 <table>
 <tr>
 <td width="130" valign="top" align="center">
-<img src=".github/assets/shimanto-neer.png" alt="Shimanto Neer" width="96">
+<img src="public/img/shimanto-neer.png" alt="Shimanto Neer" width="96">
 </td>
 <td valign="top">
 
@@ -670,7 +676,7 @@ Corrections are the point.
 | `templates/` | The four free agency templates as markdown, **generated** from `src/content/templates.ts` |
 | `public/og/` | One branded 1200×630 social card per page, **generated** by `pnpm og` |
 | `public/fonts/` | General Sans, the ClientOS display face |
-| `.github/assets/` | The images in this README: banner, showreel and product screenshots |
+| `public/screens/`, `public/video/` | Product screenshots and the showreel, used by both the site and this README |
 | `scripts/` | The three build scripts (below) |
 | `AUDIT.md` | The full source audit of getclientos.com and the two reachable competitors |
 | `UNVERIFIED.md` | What could not be checked, and is therefore not claimed |

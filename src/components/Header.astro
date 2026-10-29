@@ -1,43 +1,238 @@
 ---
-import Logo from './Logo.astro';
-import { demoUrl } from '../content/site';
+import Icon from './Icon.astro';
+import Wordmark from './Wordmark.astro';
+import { demoUrl, features, site } from '../content/site';
+import { alternatives } from '../content/alternatives';
+import { featureStyle, toneStyle } from '../lib/feature-style';
+import type { IconName } from '../lib/icons';
 
 /**
- * `aria-current="page"` is set by prefix match so a feature page highlights
- * "Features" and an alternative page highlights "Alternatives".
+ * A floating glass bar. Features, Compare and Resources open panels: on hover
+ * with a mouse, on click or Enter from the keyboard, and inline inside the
+ * mobile menu. `aria-current="page"` is set by prefix match, so a feature
+ * page highlights "Features" and a comparison page highlights "Compare".
  */
 const here = Astro.url.pathname;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
-const nav = [
-  { href: `${base}/features/`, label: 'Features', match: `${base}/features` },
-  { href: `${base}/pricing/`, label: 'Pricing', match: `${base}/pricing` },
-  { href: `${base}/alternatives/`, label: 'Alternatives', match: null },
-  { href: `${base}/client-portal-software/`, label: 'The list', match: null },
-  { href: `${base}/templates/`, label: 'Templates', match: `${base}/templates` },
-  { href: `${base}/install/`, label: 'Install', match: null },
-  { href: `${base}/faq/`, label: 'FAQ', match: null },
-];
+const under = (...prefixes: string[]) => prefixes.some((p) => here.startsWith(`${base}${p}`));
+const altPaths = ['/alternatives/', ...alternatives.map((a) => `/${a.slug}/`)];
 
-const isCurrent = (item: (typeof nav)[number]) =>
-  here === item.href || (item.match ? here.startsWith(item.match) : false);
+const resources: { href: string; label: string; note: string; icon: IconName }[] = [
+  {
+    href: `${base}/client-portal-software/`,
+    label: 'The curated list',
+    note: 'Self-hosted and hosted client portals',
+    icon: 'list',
+  },
+  {
+    href: `${base}/templates/`,
+    label: 'Free templates',
+    note: 'Onboarding, kickoff, SOP and reporting',
+    icon: 'file',
+  },
+  {
+    href: `${base}/install/`,
+    label: 'Install guide',
+    note: 'One A record, one command',
+    icon: 'terminal',
+  },
+  { href: `${base}/faq/`, label: 'FAQ', note: 'The questions agencies ask first', icon: 'help' },
+];
 ---
 
-<header class="site-header">
-  <div class="wrap">
-    <a class="brand" href={`${base}/`}>
-      <Logo />
-      <span>Self-Hosted Client Portals</span>
+<header class="site-header" data-header>
+  <div class="nav-shell">
+    <a class="brand" href={`${base}/`} aria-label={`${site.name} — home`}>
+      <Wordmark class="brand-word" />
+      <span class="brand-tag"><Icon name="server" />Self-hosted</span>
     </a>
-    <nav class="nav" aria-label="Main">
-      {
-        nav.map((item) => (
-          <a href={item.href} aria-current={isCurrent(item) ? 'page' : undefined}>
-            {item.label}
+
+    <button
+      class="nav-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="site-nav"
+      data-nav-toggle
+    >
+      <Icon name="menu" />
+      <span class="visually-hidden">Menu</span>
+    </button>
+
+    <nav class="nav" id="site-nav" aria-label="Main">
+      <ul class="nav-list">
+        <li class="nav-item" data-menu>
+          <a
+            class="nav-link"
+            href={`${base}/features/`}
+            aria-current={under('/features') ? 'page' : undefined}
+          >
+            Features
           </a>
-        ))
-      }
-      <a class="btn btn-primary btn-sm" href={demoUrl('header')} rel="noopener">Try the demo</a>
+          <button class="nav-caret" type="button" aria-expanded="false" aria-label="Feature areas">
+            <Icon name="chevron" />
+          </button>
+          <div class="nav-panel nav-panel-wide">
+            <ul class="mega">
+              {
+                features.map((f) => (
+                  <li style={toneStyle(f.slug)}>
+                    <a href={`${base}/features/${f.slug}/`}>
+                      <span class="mega-ico">
+                        <Icon name={featureStyle[f.slug].icon} />
+                      </span>
+                      <span>
+                        <b>{f.nav}</b>
+                        <small>{f.points[0].title}</small>
+                      </span>
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+            <a class="panel-foot" href={`${base}/features/`}>
+              All 8 feature areas on one page <Icon name="arrow" />
+            </a>
+          </div>
+        </li>
+
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            href={`${base}/pricing/`}
+            aria-current={under('/pricing') ? 'page' : undefined}
+          >
+            Pricing
+          </a>
+        </li>
+
+        <li class="nav-item" data-menu>
+          <a
+            class="nav-link"
+            href={`${base}/alternatives/`}
+            aria-current={under(...altPaths) ? 'page' : undefined}
+          >
+            Compare
+          </a>
+          <button class="nav-caret" type="button" aria-expanded="false" aria-label="Comparisons">
+            <Icon name="chevron" />
+          </button>
+          <div class="nav-panel">
+            <ul class="menu">
+              {
+                alternatives.map((a) => (
+                  <li>
+                    <a href={`${base}/${a.slug}/`}>
+                      <span class="menu-ico">
+                        <Icon name="scale" />
+                      </span>
+                      <span>
+                        <b>vs {a.nav}</b>
+                        <small>Checked against their own pricing page</small>
+                      </span>
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+            <a class="panel-foot" href={`${base}/alternatives/`}>
+              All comparisons <Icon name="arrow" />
+            </a>
+          </div>
+        </li>
+
+        <li class="nav-item" data-menu>
+          <a
+            class="nav-link"
+            href={`${base}/client-portal-software/`}
+            aria-current={
+              under('/client-portal-software', '/templates', '/install', '/faq') ? 'page' : undefined
+            }
+          >
+            Resources
+          </a>
+          <button class="nav-caret" type="button" aria-expanded="false" aria-label="Resources">
+            <Icon name="chevron" />
+          </button>
+          <div class="nav-panel">
+            <ul class="menu">
+              {
+                resources.map((r) => (
+                  <li>
+                    <a href={r.href}>
+                      <span class="menu-ico">
+                        <Icon name={r.icon} />
+                      </span>
+                      <span>
+                        <b>{r.label}</b>
+                        <small>{r.note}</small>
+                      </span>
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        </li>
+      </ul>
+
+      <div class="nav-actions">
+        <a class="nav-gh" href={site.repo} rel="noopener" aria-label="This site on GitHub">
+          <Icon name="github" />
+        </a>
+        <a class="btn btn-primary nav-cta" href={demoUrl('header')} rel="noopener">
+          Try the demo <Icon name="arrow" />
+        </a>
+      </div>
     </nav>
   </div>
 </header>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  if (header) {
+    /* A stronger bar once the page has moved. */
+    const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 8);
+    onScroll();
+    addEventListener('scroll', onScroll, { passive: true });
+
+    /* Mobile menu. */
+    const toggle = header.querySelector<HTMLButtonElement>('[data-nav-toggle]')!;
+    toggle.addEventListener('click', () => {
+      const open = header.classList.toggle('nav-open');
+      toggle.setAttribute('aria-expanded', String(open));
+    });
+
+    /* Dropdowns: the caret opens its panel; one open at a time. */
+    const menus = [...header.querySelectorAll<HTMLElement>('[data-menu]')];
+    const close = (except?: HTMLElement) => {
+      for (const m of menus) {
+        if (m === except) continue;
+        m.classList.remove('open');
+        m.querySelector('.nav-caret')?.setAttribute('aria-expanded', 'false');
+      }
+    };
+    for (const m of menus) {
+      const caret = m.querySelector<HTMLButtonElement>('.nav-caret')!;
+      caret.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const open = !m.classList.contains('open');
+        close(m);
+        m.classList.toggle('open', open);
+        caret.setAttribute('aria-expanded', String(open));
+      });
+    }
+    document.addEventListener('click', (e) => {
+      if (!header.contains(e.target as Node)) close();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return;
+      close();
+      if (header.classList.contains('nav-open')) {
+        header.classList.remove('nav-open');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.focus();
+      }
+    });
+  }
+</script>

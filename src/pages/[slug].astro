@@ -168,7 +168,13 @@ const money = (n: number) => `$${n.toLocaleString('en-US')}`;
               <tbody>
                 {packages.map((p) => (
                   <tr>
-                    <th scope="row" class="ours">{p.name}</th>
+                    <th scope="row" class="ours">
+                      {p.buyUrl ? (
+                        <a href={p.buyUrl} rel="noopener">{p.name}</a>
+                      ) : (
+                        p.name
+                      )}
+                    </th>
                     <td class="ours">{p.price} {p.period === 'contact' ? '' : p.period}</td>
                     <td class="ours">{p.updates}, {p.support.toLowerCase()}, {p.domains.toLowerCase()}</td>
                   </tr>

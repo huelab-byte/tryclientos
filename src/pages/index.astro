@@ -1,10 +1,11 @@
 ---
 import Base from '../layouts/Base.astro';
-import Cta from '../components/Cta.astro';
 import FaqList from '../components/FaqList.astro';
+import Logo from '../components/Logo.astro';
 import {
   AUDIT_DATE,
   byTheNumbers,
+  demo,
   demoUrl,
   docsUrl,
   features,
@@ -15,18 +16,16 @@ import {
   pricingFacts,
   shortDescription,
   stack,
-  taglines,
   workflow,
 } from '../content/site';
 import { faq } from '../content/faq';
 import { alternatives } from '../content/alternatives';
 import { faqPage, softwareApplication } from '../lib/schema';
+import { iconSvg, type IconName } from '../lib/icons';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 
-/* Tagline 1 — the site's own headline — belongs on the home page. */
-const tagline = taglines[0];
 
 /* Only the broadly-asked questions here; /faq/ carries all of them. */
 const homeFaq = faq.filter((f) =>
@@ -39,6 +38,123 @@ const homeFaq = faq.filter((f) =>
     'Can I try it before buying?',
   ].includes(f.q),
 );
+
+const featureHref = (slug: string) => `${base}/features/${slug}/`;
+const screen = (name: string) => `${base}/screens/${name}.webp`;
+
+/**
+ * The product tour. Every screenshot is a frame from the official ClientOS
+ * tutorial recordings, cropped to the browser window; every sentence restates
+ * a point already in src/content/site.ts.
+ */
+const tour = [
+  {
+    id: 'orders',
+    label: 'Orders',
+    title: 'Every order shows whose move it is',
+    body: 'Statuses move with briefs, hand-overs and approvals. Paid orders still waiting on a brief sit at the top, ready to chase in one action.',
+    feature: 'orders-and-delivery',
+  },
+  {
+    id: 'order-detail',
+    label: 'Order page',
+    title: 'The brief, the files and the clock in one place',
+    body: 'An order carries the brief, the conversation, the invoice and the margin — and shows time with you, time with the client, and whether it was on time.',
+    feature: 'orders-and-delivery',
+  },
+  {
+    id: 'storefront',
+    label: 'Store and checkout',
+    title: 'A sales page for every service, on your domain',
+    body: 'Packages, add-ons and five pricing models. The order exists only once the payment provider confirms it.',
+    feature: 'service-store-and-checkout',
+  },
+  {
+    id: 'client-portal',
+    label: 'Client portal',
+    title: 'What your clients see, under your name',
+    body: 'Their orders, what is waiting on them and what is outstanding — in your colours, with your words. Clients never see ClientOS.',
+    feature: 'white-label-client-portal',
+  },
+  {
+    id: 'messages',
+    label: 'Messages',
+    title: 'Conversations next to the work',
+    body: 'One thread per client and per order, plus your team’s own channels. Send a priced offer and the client accepts and pays it in one click.',
+    feature: 'messages-and-support',
+  },
+  {
+    id: 'tickets',
+    label: 'Help desk',
+    title: 'A help desk in the same portal',
+    body: 'A ticket queue with priority, assignee and first-response targets counted in your business hours only.',
+    feature: 'messages-and-support',
+  },
+  {
+    id: 'invoices',
+    label: 'Invoices',
+    title: 'Invoices that settle themselves',
+    body: 'Gapless numbering, pay links anyone can use, partial payments, credit notes and subscriptions that bill themselves.',
+    feature: 'invoicing-and-payments',
+  },
+  {
+    id: 'reports',
+    label: 'Reports',
+    title: 'A profit and loss that adds itself up',
+    body: 'Revenue, item costs, delivery expenses, gross and net profit, month by month. Every figure per currency, never silently converted.',
+    feature: 'invoicing-and-payments',
+  },
+];
+
+const pillars: { icon: IconName; title: string; body: string }[] = [
+  {
+    icon: 'server',
+    title: 'Your server, your database',
+    body: 'Every client, order, message, invoice and file lives in a PostgreSQL database on a Linux VPS you rent and control.',
+  },
+  {
+    icon: 'tag',
+    title: 'One licence, not a subscription',
+    body: `${pricingFacts.licenceScope} ${pricingFacts.noFees}`,
+  },
+  {
+    icon: 'palette',
+    title: 'Your brand, nowhere near ours',
+    body: 'Your domain, five logo slots and two brand colours that repaint the portal, admin, emails and invoices. Clients never see the name ClientOS.',
+  },
+  {
+    icon: 'wallet',
+    title: 'Payments straight to you',
+    body: 'Stripe, PayPal, NOWPayments, CoinGate, your own BTCPay Server and manual crypto. Money goes to your accounts; ClientOS takes no cut.',
+  },
+];
+
+const icon = (name: IconName) => iconSvg(name);
+
+/* The install mock-up, one entry per line so each can animate in on its own. */
+const terminal: { text: string; kind?: 'dim' | 'cmd' | 'ok' | 'done' }[] = [
+  { text: '# one A record:  clients.youragency.com  →  your server’s IP', kind: 'dim' },
+  { text: '$ sudo ./install.sh', kind: 'cmd' },
+  { text: '==> Checking the server      2 CPU, 3911 MB memory, 74 GB free disk' },
+  { text: '==> Checking your license    available to this key' },
+  { text: '==> Checking DNS             clients.youragency.com → 203.0.113.24' },
+  { text: '==> Writing deploy/.env      secrets generated' },
+  { text: '==> Downloading ClientOS     every file checked by SHA-256', kind: 'ok' },
+  { text: '==> Starting                 the API is up' },
+  { text: '✓ ClientOS is running.       https://clients.youragency.com/admin/setup', kind: 'done' },
+];
+
+const dotMirror = {
+  quote:
+    'We sell white-label. Our partners trust us with their clients’ names, and for years that list sat on someone else’s servers, on a bill that went up every time we hired. ClientOS put the whole operation on our own server, under our own name, and the monthly bill simply went away.',
+  name: 'Shimanto Neer',
+  role: 'Founder, Dot Mirror',
+  stats: [
+    { value: '$0', label: 'monthly portal bill' },
+    { value: '100%', label: 'of client history moved' },
+    { value: '1 day', label: 'from install to live' },
+  ],
+};
 ---
 
 <Base
@@ -48,84 +164,175 @@ const homeFaq = faq.filter((f) =>
   crumbs={[{ label: 'Home' }]}
   schema={[softwareApplication(canonical), faqPage(homeFaq)]}
 >
-  <section class="hero">
-    <div class="wrap">
-      <p class="eyebrow">Self-hosted · The client portal for agencies</p>
-      <h1>{tagline}</h1>
-      <p class="lede">
+  <!-- ============================================================ hero -->
+  <section class="h-hero">
+    <div class="h-hero-glow" aria-hidden="true"></div>
+    <div class="h-hero-grid" aria-hidden="true"></div>
+    <div class="wrap h-hero-inner">
+      <p class="h-pill" data-reveal>
+        <span class="h-pill-dot"></span>
+        Self-hosted · One-time license from $490
+      </p>
+      <h1 data-reveal>
+        Your client portal.<br />
+        Your server. <span class="h-grad">Your data.</span>
+      </h1>
+      <p class="h-lede" data-reveal>
         Sell services, take payment, deliver work, invoice and support clients from one portal
-        under your brand — installed on a server you control with one command. Your clients’ data
-        stays with you.
+        under your brand — installed on a server you control with one command.
       </p>
-      <div class="btn-row">
-        <a class="btn btn-primary" href={demoUrl('home_hero')} rel="noopener">
-          Try the instant demo
+      <div class="h-cta" data-reveal>
+        <a class="btn btn-primary h-btn-glow" href={demoUrl('home_hero')} rel="noopener">
+          Try the instant demo <Fragment set:html={icon('arrow')} />
         </a>
-        <a class="btn btn-secondary" href={`${base}/pricing/`}>See pricing</a>
+        <a class="btn h-btn-glass" href="#tour">Take the tour</a>
       </div>
-      <ul class="hero-points">
-        <li>Runs on your own server</li>
-        <li>Client data never leaves it</li>
-        <li>One-time license, no per-seat fees</li>
+      <ul class="h-points" data-reveal>
+        <li><Fragment set:html={icon('check')} />Runs on your own server</li>
+        <li><Fragment set:html={icon('check')} />Client data never leaves it</li>
+        <li><Fragment set:html={icon('check')} />Unlimited clients and staff</li>
+        <li><Fragment set:html={icon('check')} />No per-seat fees</li>
       </ul>
-    </div>
-  </section>
 
-  <section>
-    <div class="wrap">
-      <h2>Own your client portal, instead of renting it</h2>
-      <p class="lede">
-        {shortDescription}
-      </p>
-      <div class="grid grid-2" style="margin-top:1.75rem">
-        <div class="card">
-          <h3>Your server, your database</h3>
-          <p>
-            Every client, order, message, invoice and file lives in a PostgreSQL database on a
-            Linux VPS you rent and control. The only thing that leaves it is a license check-in
-            twice a day, carrying the signed license and the version you run — no client, order or
-            invoice data.
-          </p>
+      <div class="h-stage" data-reveal>
+        <img
+          class="h-shot"
+          src={screen('orders')}
+          width="1600"
+          height="764"
+          alt="The ClientOS orders list on clients.youragency.com, with paid orders still waiting on a brief listed at the top"
+          fetchpriority="high"
+        />
+        <div class="h-chip h-chip-a">
+          <span class="h-chip-ico h-ico-green"><Fragment set:html={icon('card')} /></span>
+          <span><b>Payment confirmed</b><small>the order is created only now</small></span>
         </div>
-        <div class="card">
-          <h3>One licence, not a subscription</h3>
-          <p>
-            {pricingFacts.licenceScope} {pricingFacts.noFees} Your only running cost is the server,
-            which getclientos.com puts at {pricingFacts.serverCost}. When your updates end, ClientOS
-            keeps working on the version you hold.
-          </p>
+        <div class="h-chip h-chip-b">
+          <span class="h-chip-ico h-ico-orange"><Fragment set:html={icon('check')} /></span>
+          <span><b>Delivery approved</b><small>or it approves itself if they go quiet</small></span>
         </div>
-        <div class="card">
-          <h3>Your brand, nowhere near ours</h3>
-          <p>
-            Your domain, five logo slots and two brand colours that repaint the portal, the admin,
-            the sign-in screen, your emails and your invoices. Rename the words clients read.
-            Clients never see the name ClientOS.
-          </p>
-        </div>
-        <div class="card">
-          <h3>Payments straight to you</h3>
-          <p>
-            Stripe, PayPal, NOWPayments, CoinGate, your own BTCPay Server, manual crypto wallets
-            and account credit. Money goes to your accounts and ClientOS takes no cut of it.
-          </p>
+        <div class="h-chip h-chip-c">
+          <span class="h-chip-ico h-ico-violet"><Fragment set:html={icon('lock')} /></span>
+          <span><b>clients.youragency.com</b><small>your domain, your server</small></span>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="section-raised">
+  <!-- ============================================================ marquee -->
+  <section class="h-marquee" aria-label="Connects to">
+    <p class="h-marquee-label">Money and mail go straight to your own accounts</p>
+    <div class="h-marquee-track">
+      {
+        [0, 1].map((copy) => (
+          <ul aria-hidden={copy === 1 ? 'true' : undefined}>
+            {integrations.map((name) => (
+              <li>{name}</li>
+            ))}
+          </ul>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- ============================================================ pillars -->
+  <section class="h-section">
     <div class="wrap">
-      <p class="eyebrow">How it works</p>
-      <h2>From first click to final invoice</h2>
-      <p class="lede" style="margin-bottom:1.75rem">
-        ClientOS follows an order the whole way, so nothing falls between tools.
-      </p>
-      <ol class="steps">
+      <div class="h-head" data-reveal>
+        <p class="eyebrow">Why self-host</p>
+        <h2>Own your client portal, instead of renting it</h2>
+        <p class="lede">{shortDescription}</p>
+      </div>
+      <div class="h-pillars">
         {
-          workflow.map((step) => (
-            <li>
-              <span class="step-n">{step.n}</span>
+          pillars.map((p, i) => (
+            <div class="h-pillar" data-reveal style={`--d:${i * 80}ms`}>
+              <span class="h-pillar-ico" set:html={icon(p.icon)} />
+              <h3>{p.title}</h3>
+              <p>{p.body}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ tour -->
+  <section class="h-section h-tour-section" id="tour">
+    <div class="wrap">
+      <div class="h-head h-head-center" data-reveal>
+        <p class="eyebrow">Product tour</p>
+        <h2>One portal for the whole job</h2>
+        <p class="lede">
+          Real screens from ClientOS, taken from the official tutorial recordings. Pick an area.
+        </p>
+      </div>
+
+      <div class="h-tour" data-tour data-reveal>
+        <div class="h-tabs" role="tablist" aria-label="ClientOS screens">
+          {
+            tour.map((t, i) => (
+              <button
+                type="button"
+                role="tab"
+                id={`tab-${t.id}`}
+                aria-controls={`panel-${t.id}`}
+                aria-selected={i === 0 ? 'true' : 'false'}
+                tabindex={i === 0 ? 0 : -1}
+              >
+                {t.label}
+              </button>
+            ))
+          }
+        </div>
+        <div class="h-panels">
+          {
+            tour.map((t, i) => (
+              <div
+                class="h-panel"
+                role="tabpanel"
+                id={`panel-${t.id}`}
+                aria-labelledby={`tab-${t.id}`}
+                hidden={i !== 0}
+              >
+                <div class="h-panel-copy">
+                  <h3>{t.title}</h3>
+                  <p>{t.body}</p>
+                  <a href={featureHref(t.feature)}>
+                    More on this <Fragment set:html={icon('arrow')} />
+                  </a>
+                </div>
+                <img
+                  src={screen(t.id)}
+                  width="1600"
+                  height="764"
+                  alt={`ClientOS — ${t.label.toLowerCase()} screen`}
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                />
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ workflow -->
+  <section class="h-section">
+    <div class="wrap">
+      <div class="h-head" data-reveal>
+        <p class="eyebrow">How it works</p>
+        <h2>From first click to final invoice</h2>
+        <p class="lede">
+          ClientOS follows an order the whole way, so nothing falls between tools — and there is
+          no sales call in the middle.
+        </p>
+      </div>
+      <ol class="h-flow">
+        {
+          workflow.map((step, i) => (
+            <li data-reveal style={`--d:${i * 90}ms`}>
+              <span class="h-flow-n">{step.n}</span>
               <h3>{step.title}</h3>
               <p>{step.body}</p>
             </li>
@@ -135,215 +342,1592 @@ const homeFaq = faq.filter((f) =>
     </div>
   </section>
 
-  <section>
+  <!-- ============================================================ numbers -->
+  <section class="h-dark">
+    <div class="h-dark-glow" aria-hidden="true"></div>
     <div class="wrap">
-      <p class="eyebrow">Features</p>
-      <h2>Everything an agency runs on, in one portal you own</h2>
-      <p class="lede" style="margin-bottom:1.75rem">
-        getclientos.com documents 12 areas and 78 features. Here they are grouped into the eight
-        that matter when you are choosing a portal — each page says which areas of the official
-        feature list it summarises.
-      </p>
-      <div class="grid">
-        {
-          features.map((f) => (
-            <a class="card card-link" href={`${base}/features/${f.slug}/`}>
-              <h3>{f.nav}</h3>
-              <p>{f.description}</p>
-              <span class="card-more">Read about {f.nav.toLowerCase()} →</span>
-            </a>
-          ))
-        }
+      <div class="h-head h-head-center" data-reveal>
+        <p class="eyebrow h-eyebrow-light">By the numbers</p>
+        <h2>Deep where agencies need depth</h2>
       </div>
-      <div class="btn-row">
-        <a class="btn btn-secondary" href={`${base}/features/`}>All features, one page</a>
-      </div>
-    </div>
-  </section>
-
-  <section class="section-raised">
-    <div class="wrap">
-      <p class="eyebrow">By the numbers</p>
-      <h2>Deep where agencies need depth</h2>
-      <ul class="numbers" style="margin-top:1.5rem">
+      <ul class="h-stats">
         {
-          byTheNumbers.map((n) => (
-            <li>
-              <span class="n">{n.value}</span>
-              <span class="l">{n.label}</span>
-              <span class="s">{n.note}</span>
+          byTheNumbers.map((n, i) => (
+            <li data-reveal style={`--d:${i * 70}ms`}>
+              <span class="h-stat-n">{n.value}</span>
+              <span class="h-stat-l">{n.label}</span>
+              <span class="h-stat-s">{n.note}</span>
             </li>
           ))
         }
       </ul>
-      <p class="meta" style="margin-top:1rem">
+      <p class="h-dark-meta">
         Counts as published on
-        <a href={officialUrl('home_numbers')} rel="noopener">getclientos.com</a>, checked
-        {AUDIT_DATE}.
+        <a href={officialUrl('home_numbers')} rel="noopener">getclientos.com</a>, checked {AUDIT_DATE}.
       </p>
+
+      <figure class="h-reel" data-reveal>
+        <video
+          src={`${base}/video/showreel.mp4`}
+          poster={`${base}/video/showreel-poster.webp`}
+          muted
+          loop
+          playsinline
+          preload="none"
+          data-autoplay
+          aria-label="The ClientOS showreel: the store, orders, invoices and installing on your own server"
+        ></video>
+        <figcaption>The 40-second ClientOS showreel.</figcaption>
+      </figure>
     </div>
   </section>
 
-  <section>
+  <!-- ============================================================ features -->
+  <section class="h-section">
     <div class="wrap">
-      <p class="eyebrow">Installation</p>
-      <h2>Self-hosting without the server headache</h2>
-      <p class="lede">
-        No Docker files to write, no environment variables to fill in, no proxy to configure. One A
-        record points your domain at a Linux VPS, one command installs everything, and you finish
-        in the browser.
-      </p>
-      <pre><code>{`# one A record:  clients.youragency.com  →  your server's IP
-
-$ sudo ./install.sh
-==> Checking the server      2 CPU, 3911 MB memory, 74 GB free disk
-==> Checking your license    available to this key
-==> Checking DNS             clients.youragency.com → 203.0.113.24
-==> Writing deploy/.env      secrets generated
-==> Downloading ClientOS     every file checked by SHA-256
-==> Starting                 the API is up
-✓ ClientOS is running.       https://clients.youragency.com/admin/setup`}</code></pre>
-      <p>
-        After that it is one command each: <code>clientos update</code> backs up, downloads the new
-        release and restarts; <code>clientos rollback</code> goes back one release;
-        <code>clientos backup</code> writes the database, files and settings into a folder you can
-        copy anywhere.
-      </p>
-      <div class="note">
-        <p>
-          <strong>One thing to plan for:</strong> the ClientOS docs are explicit that nothing runs
-          your backups until you schedule them. Their operations page gives a cron line for a daily
-          03:00 backup, and tells you to copy the folder off the server — a backup on the same disk
-          is lost with the disk.
+      <div class="h-head" data-reveal>
+        <p class="eyebrow">Features</p>
+        <h2>Everything an agency runs on</h2>
+        <p class="lede">
+          getclientos.com documents 12 areas and 78 features. Here they are in the eight groups
+          that matter when you are choosing a portal.
         </p>
       </div>
-      <div class="btn-row">
-        <a class="btn btn-secondary" href={`${base}/install/`}>Install guide summary</a>
-        <a class="btn btn-secondary" href={docsUrl('home_install', '/installation')} rel="noopener">
-          Official installation docs
-        </a>
+      <div class="h-features">
+        {
+          features.map((f, i) => (
+            <a class="h-feature" href={featureHref(f.slug)} data-reveal style={`--d:${(i % 4) * 60}ms`}>
+              <span class="h-feature-n">{String(i + 1).padStart(2, '0')}</span>
+              <h3>{f.nav}</h3>
+              <p>{f.points[0].title}. {f.points[1].title}. {f.points[2].title}.</p>
+              <span class="h-feature-more">
+                Read more <Fragment set:html={icon('arrow')} />
+              </span>
+            </a>
+          ))
+        }
       </div>
     </div>
   </section>
 
-  <section class="section-raised">
+  <!-- ============================================================ data boundary -->
+  <section class="h-section h-tint">
+    <div class="wrap h-split">
+      <div data-reveal>
+        <p class="eyebrow">Data ownership</p>
+        <h2>Three things leave your server. That is all.</h2>
+        <p class="lede">
+          Hosted portals keep your clients, contracts and invoices on someone else’s computer.
+          ClientOS runs entirely on a server you rent and control.
+        </p>
+        <p>
+          The license check-in carries no client, order or invoice data. If it cannot get through,
+          ClientOS keeps working for a seven-day grace period; after that only the admin turns
+          read-only — the client portal, checkout and webhooks keep running, and nothing is deleted.
+        </p>
+        <a class="h-link" href={featureHref('security-and-data-ownership')}>
+          Security and data ownership <Fragment set:html={icon('arrow')} />
+        </a>
+      </div>
+
+      <div class="h-boundary" data-reveal>
+        <div class="h-server">
+          <p class="h-server-title"><Fragment set:html={icon('server')} /> Your server</p>
+          <ul>
+            <li><code>/</code> Client portal</li>
+            <li><code>/admin</code> Agency admin</li>
+            <li><code>/v1</code> API</li>
+            <li>PostgreSQL · clients, orders, invoices</li>
+            <li>File storage · signed links that expire</li>
+          </ul>
+        </div>
+        <ul class="h-exits">
+          <li>
+            <span class="h-exit-ico" set:html={icon('mail')} />
+            <span><b>Emails you send</b><small>through your Resend account or SMTP server</small></span>
+          </li>
+          <li>
+            <span class="h-exit-ico" set:html={icon('card')} />
+            <span><b>Payments</b><small>straight to your own gateway accounts</small></span>
+          </li>
+          <li class="h-exit-dashed">
+            <span class="h-exit-ico" set:html={icon('key')} />
+            <span><b>License check-in, twice a day</b><small>the signed license and the version you run — nothing else</small></span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ install -->
+  <section class="h-section">
+    <div class="wrap h-split h-split-rev">
+      <div class="h-term" data-reveal data-term>
+        <div class="h-term-bar">
+          <span></span><span></span><span></span>
+          <p>root@clientos-prod: ~</p>
+        </div>
+        <pre><code>{
+          terminal.map((line, i) => (
+            <span class={`h-line ${line.kind ?? ''}`} style={`--i:${i}`}>{line.text}</span>
+          ))
+        }</code></pre>
+      </div>
+      <div data-reveal>
+        <p class="eyebrow">Installation</p>
+        <h2>Self-hosting without the server headache</h2>
+        <p class="lede">
+          No Docker files to write, no environment variables, no proxy to configure. One A record,
+          one command, and you finish in the browser.
+        </p>
+        <ul class="h-specs">
+          <li><b>~10 min</b><small>install, per the docs</small></li>
+          <li><b>2–4 GB</b><small>memory</small></li>
+          <li><b>Ubuntu</b><small>22.04 / 24.04 or Debian 12</small></li>
+          <li><b>~$10/mo</b><small>server cost</small></li>
+        </ul>
+        <p class="meta">
+          Then one command each: <code>clientos update</code>, <code>clientos rollback</code>,
+          <code>clientos backup</code>. Backups do not run until you schedule them.
+        </p>
+        <div class="btn-row">
+          <a class="btn btn-secondary" href={`${base}/install/`}>Install guide</a>
+          <a class="btn btn-secondary" href={docsUrl('home_install', '/installation')} rel="noopener">
+            Official docs
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ pricing -->
+  <section class="h-section h-pricing">
     <div class="wrap">
-      <p class="eyebrow">Pricing</p>
-      <h2>Pay once. Own it.</h2>
-      <p class="lede" style="margin-bottom:1.75rem">
-        {pricingFacts.licenceScope} {pricingFacts.noFees}
-      </p>
-      <div class="plans">
+      <div class="h-head h-head-center" data-reveal>
+        <p class="eyebrow">Pricing</p>
+        <h2>Pay once. Own it.</h2>
+        <p class="lede">
+          {pricingFacts.licenceScope} {pricingFacts.noFees}
+        </p>
+      </div>
+      <div class="h-plans">
         {
-          packages.map((p) => (
-            <div class={p.highlight ? 'plan plan-featured' : 'plan'}>
-              {p.note && <span class="plan-badge">{p.note}</span>}
+          packages.map((p, i) => (
+            <div class={p.highlight ? 'h-plan h-plan-hot' : 'h-plan'} data-reveal style={`--d:${i * 80}ms`}>
+              {p.note && <span class="h-plan-badge">{p.note}</span>}
               <h3>{p.name}</h3>
-              <p class="price">{p.price}</p>
-              <p class="per">{p.period === 'contact' ? 'contact for a quote' : p.period}</p>
+              <p class="h-price">{p.price}</p>
+              <p class="h-per">{p.period === 'contact' ? 'contact for a quote' : 'one-time'}</p>
               <ul>
-                <li>{p.updates}</li>
-                <li>{p.support}</li>
-                <li>{p.domains}</li>
+                <li><Fragment set:html={icon('check')} />{p.updates}</li>
+                <li><Fragment set:html={icon('check')} />{p.support}</li>
+                <li><Fragment set:html={icon('check')} />{p.domains}</li>
+                <li><Fragment set:html={icon('check')} />{p.install}</li>
               </ul>
+              <a
+                class={p.highlight ? 'btn btn-primary' : 'btn btn-secondary'}
+                href={p.buyUrl ?? officialUrl('home_pricing_custom', '/contact')}
+                rel="noopener"
+              >
+                {p.buyUrl ? `Buy ${p.name}` : 'Ask for a quote'}
+              </a>
             </div>
           ))
         }
       </div>
-      <h3 style="margin-top:2rem">In every package</h3>
-      <ul class="checks">
-        {inEveryPackage.map((item) => <li>{item}</li>)}
-      </ul>
-      <div class="btn-row">
-        <a class="btn btn-secondary" href={`${base}/pricing/`}>Full pricing summary</a>
-        <a class="btn btn-secondary" href={officialUrl('home_pricing', '/#pricing')} rel="noopener">
-          Official pricing page
-        </a>
+      <div class="h-every" data-reveal>
+        <h3>In every package</h3>
+        <ul>
+          {inEveryPackage.map((item) => <li><Fragment set:html={icon('check')} />{item}</li>)}
+        </ul>
       </div>
+      <p class="center meta">
+        <a href={`${base}/pricing/`}>Full pricing summary</a> · Prices in US dollars, checked {AUDIT_DATE}.
+      </p>
     </div>
   </section>
 
-  <section>
+  <!-- ============================================================ case study -->
+  <section class="h-section">
     <div class="wrap">
-      <p class="eyebrow">Compared with hosted portals</p>
-      <h2>Switching from a subscription portal</h2>
-      <p class="lede" style="margin-bottom:1.5rem">
-        Hosted portals are quick to start and get more expensive the longer you stay and the more
-        people you hire. These comparisons are built from each vendor’s own published pricing, with
-        the date each one was checked — and each says plainly who should stay where they are.
-      </p>
-      <div class="grid">
+      <figure class="h-story" data-reveal>
+        <div class="h-story-glow" aria-hidden="true"></div>
+        <p class="eyebrow h-eyebrow-light">Case study · Dot Mirror</p>
+        <blockquote>“{dotMirror.quote}”</blockquote>
+        <figcaption>
+          <img src={`${base}/img/shimanto-neer.png`} width="56" height="56" alt="" loading="lazy" />
+          <span><b>{dotMirror.name}</b><small>{dotMirror.role}</small></span>
+        </figcaption>
+        <ul class="h-story-stats">
+          {
+            dotMirror.stats.map((s) => (
+              <li>
+                <b>{s.value}</b>
+                <small>{s.label}</small>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="h-story-src">
+          ClientOS’s own published figures, from the
+          <a href={officialUrl('home_casestudy', '/case-studies/dotmirror')} rel="noopener">
+            Dot Mirror case study
+          </a>.
+        </p>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============================================================ compare -->
+  <section class="h-section h-tint">
+    <div class="wrap">
+      <div class="h-head" data-reveal>
+        <p class="eyebrow">Compared with hosted portals</p>
+        <h2>Switching from a subscription portal</h2>
+        <p class="lede">
+          Built from each vendor’s own published pricing, with the date it was checked — and each
+          comparison says plainly who should stay where they are.
+        </p>
+      </div>
+      <div class="h-features">
         {
-          alternatives.map((a) => (
-            <a class="card card-link" href={`${base}/${a.slug}/`}>
-              <h3>{a.product} alternative</h3>
+          alternatives.map((a, i) => (
+            <a class="h-feature" href={`${base}/${a.slug}/`} data-reveal style={`--d:${i * 60}ms`}>
+              <span class="h-feature-n">vs</span>
+              <h3>{a.product}</h3>
               <p>{a.description}</p>
-              <span class="card-more">Compare with ClientOS →</span>
+              <span class="h-feature-more">
+                Compare <Fragment set:html={icon('arrow')} />
+              </span>
             </a>
           ))
         }
-        <a class="card card-link" href={`${base}/client-portal-software/`}>
+        <a class="h-feature" href={`${base}/client-portal-software/`} data-reveal style="--d:180ms">
+          <span class="h-feature-n">∑</span>
           <h3>The whole landscape</h3>
           <p>
-            A curated, neutral list of self-hosted and hosted client portals for agencies, plus the
-            onboarding, proposal, invoicing and reporting tools around them.
+            A curated, neutral list of self-hosted and hosted client portals, plus the onboarding,
+            proposal, invoicing and reporting tools around them.
           </p>
-          <span class="card-more">Browse the list →</span>
+          <span class="h-feature-more">
+            Browse the list <Fragment set:html={icon('arrow')} />
+          </span>
         </a>
       </div>
     </div>
   </section>
 
-  <section class="section-raised">
+  <!-- ============================================================ stack -->
+  <section class="h-section">
     <div class="wrap">
-      <p class="eyebrow">Technology</p>
-      <h2>Production-grade, packaged for one server</h2>
-      <p class="lede">
-        The same stack modern SaaS runs on, assembled so that it installs on a single VPS and
-        updates with one command.
-      </p>
-      <div class="table-scroll" style="margin-top:1.5rem">
-        <table>
-          <caption>
-            Stack as published on getclientos.com/features and its docs introduction, checked {
-              AUDIT_DATE
-            }.
-          </caption>
-          <thead>
-            <tr><th scope="col">Component</th><th scope="col">What it does</th></tr>
-          </thead>
-          <tbody>
-            {
-              stack.map((s) => (
-                <tr>
-                  <th scope="row">{s.name}</th>
-                  <td>{s.role}</td>
-                </tr>
-              ))
-            }
-          </tbody>
-        </table>
+      <div class="h-head h-head-center" data-reveal>
+        <p class="eyebrow">Technology</p>
+        <h2>Production-grade, packaged for one server</h2>
+        <p class="lede">
+          The stack modern SaaS runs on, assembled so it installs on a single VPS and updates with
+          one command.
+        </p>
       </div>
-      <h3>Connects to</h3>
-      <p>{integrations.join(' · ')}</p>
-      <p class="meta">
+      <ul class="h-stack" data-reveal>
+        {
+          stack.map((s) => (
+            <li>
+              <b>{s.name}</b>
+              <small>{s.role}</small>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="center meta">
         Releases are verified by SHA-256 before they install. ClientOS is self-hosted but
-        <strong>not open source</strong> — it ships as ready-built Docker images, and the source
-        code is not provided.
+        <strong>not open source</strong> — it ships as ready-built Docker images.
       </p>
     </div>
   </section>
 
-  <section>
-    <div class="wrap wrap-narrow">
-      <p class="eyebrow">FAQ</p>
-      <h2>The questions agencies ask first</h2>
-      <FaqList items={homeFaq} />
-      <div class="btn-row">
-        <a class="btn btn-secondary" href={`${base}/faq/`}>All {faq.length} questions</a>
+  <!-- ============================================================ faq -->
+  <section class="h-section h-tint">
+    <div class="wrap h-faq">
+      <div data-reveal>
+        <p class="eyebrow">FAQ</p>
+        <h2>The questions agencies ask first</h2>
+        <p>
+          Every answer restates getclientos.com or its docs.
+          <a href={`${base}/faq/`}>All {faq.length} questions</a>.
+        </p>
+      </div>
+      <div data-reveal>
+        <FaqList items={homeFaq} />
       </div>
     </div>
   </section>
 
-  <Cta utm="home_footer" />
+  <!-- ============================================================ final cta -->
+  <section class="h-final">
+    <div class="h-hero-glow" aria-hidden="true"></div>
+    <div class="wrap" data-reveal>
+      <Logo class="h-final-mark" />
+      <h2>The client portal <span class="h-grad">your agency owns.</span></h2>
+      <p>
+        The instant demo emails you a login to a live ClientOS — {demo.what}. {demo.readOnly}.
+        {demo.duration}. {demo.cost}
+      </p>
+      <div class="h-cta">
+        <a class="btn btn-primary h-btn-glow" href={demoUrl('home_footer')} rel="noopener">
+          Try the instant demo <Fragment set:html={icon('arrow')} />
+        </a>
+        <a class="btn h-btn-glass" href={docsUrl('home_footer_docs')} rel="noopener">
+          Read the docs
+        </a>
+      </div>
+    </div>
+  </section>
 </Base>
+
+<script>
+  /* Scroll reveal. The hidden starting state is gated on `.js`, so the page
+     reads complete with JavaScript off. */
+  document.documentElement.classList.add('js');
+  const io = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        if (!e.isIntersecting) continue;
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    },
+    { rootMargin: '0px 0px -8% 0px' },
+  );
+  document.querySelectorAll('[data-reveal]').forEach((el) => io.observe(el));
+
+  /* The showreel plays only while it is on screen. */
+  const reel = document.querySelector<HTMLVideoElement>('video[data-autoplay]');
+  if (reel && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) reel.play().catch(() => {});
+      else reel.pause();
+    }).observe(reel);
+  } else if (reel) {
+    reel.controls = true;
+  }
+
+  /* Product tour tabs, with arrow-key movement per the WAI-ARIA tabs pattern. */
+  document.querySelectorAll<HTMLElement>('[data-tour]').forEach((tour) => {
+    const tabs = [...tour.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+    const select = (tab: HTMLButtonElement, focus = false) => {
+      for (const t of tabs) {
+        const on = t === tab;
+        t.setAttribute('aria-selected', String(on));
+        t.tabIndex = on ? 0 : -1;
+        const panel = document.getElementById(t.getAttribute('aria-controls')!);
+        if (panel) panel.hidden = !on;
+      }
+      if (focus) tab.focus();
+    };
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => select(tab));
+      tab.addEventListener('keydown', (e) => {
+        const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+        if (!step) return;
+        e.preventDefault();
+        select(tabs[(i + step + tabs.length) % tabs.length], true);
+      });
+    });
+  });
+</script>
+
+<style>
+  /* ---------------------------------------------------------- shared */
+  :global(html.js) [data-reveal] {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) var(--d, 0ms),
+      transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) var(--d, 0ms);
+  }
+  :global(html.js) [data-reveal].in {
+    opacity: 1;
+    transform: none;
+  }
+
+  section {
+    border-top: 0 !important;
+  }
+  /* The global reduced-motion rule shortens animations to ~0, which turns an
+     infinite loop into a flicker. The ambient loops are switched off instead. */
+  @media (prefers-reduced-motion: reduce) {
+    .h-hero-glow,
+    .h-pill-dot,
+    .h-chip,
+    .h-marquee-track {
+      animation: none !important;
+    }
+    .h-marquee-track {
+      flex-wrap: wrap;
+      justify-content: center;
+      width: auto;
+    }
+    .h-marquee ul[aria-hidden] {
+      display: none;
+    }
+  }
+  .h-section {
+    padding-block: clamp(4rem, 8vw, 6.5rem);
+  }
+  .h-tint {
+    background: linear-gradient(180deg, #faf7f5 0%, #f6f7fb 100%);
+  }
+  .h-head {
+    max-width: 46rem;
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+  }
+  .h-head-center {
+    margin-inline: auto;
+    text-align: center;
+  }
+  .h-head-center .lede {
+    margin-inline: auto;
+  }
+  .h-head h2,
+  .h-split h2,
+  .h-faq h2 {
+    font-size: clamp(1.85rem, 1.2rem + 2.2vw, 2.9rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+  .h-grad {
+    background: linear-gradient(92deg, #ff7a3d 0%, #f0569b 38%, #a77bf3 68%, #5ec8c9 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .h-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .h-link :global(svg),
+  .btn :global(svg),
+  .h-feature-more :global(svg),
+  .h-panel-copy a :global(svg) {
+    width: 1.05em;
+    height: 1.05em;
+  }
+
+  /* ---------------------------------------------------------- hero */
+  .h-hero {
+    position: relative;
+    overflow: hidden;
+    background: #0b0d14;
+    color: #c9ccd8;
+    /* Runs up behind the floating header bar. */
+    margin-top: calc(-1 * var(--pull));
+    padding-block: calc(var(--pull) + clamp(3rem, 7vw, 5.5rem)) 0;
+    isolation: isolate;
+  }
+  .h-hero-glow {
+    position: absolute;
+    inset: -20% -10% auto;
+    height: 120%;
+    z-index: -1;
+    background:
+      radial-gradient(38% 45% at 22% 18%, rgba(253, 65, 5, 0.42), transparent 70%),
+      radial-gradient(40% 50% at 80% 12%, rgba(140, 70, 230, 0.38), transparent 70%),
+      radial-gradient(35% 40% at 60% 55%, rgba(94, 200, 201, 0.16), transparent 70%);
+    filter: blur(20px);
+    animation: h-drift 18s ease-in-out infinite alternate;
+  }
+  @keyframes h-drift {
+    to {
+      transform: translate3d(3%, 4%, 0) scale(1.06);
+    }
+  }
+  .h-hero-grid {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(70% 60% at 50% 30%, #000 30%, transparent 75%);
+  }
+  .h-hero-inner {
+    text-align: center;
+  }
+  .h-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(8px);
+    font-size: 0.875rem;
+    color: #e8e9f0;
+    margin: 0 0 1.5rem;
+  }
+  .h-pill-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 4px rgba(253, 65, 5, 0.25);
+    animation: h-pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes h-pulse {
+    50% {
+      box-shadow: 0 0 0 7px rgba(253, 65, 5, 0);
+    }
+  }
+  .h-hero h1 {
+    color: #fff;
+    font-size: clamp(2.6rem, 1.4rem + 5.2vw, 5.4rem);
+    letter-spacing: -0.045em;
+    line-height: 1.02;
+    margin-inline: auto;
+    max-width: 16ch;
+  }
+  .h-lede {
+    font-size: clamp(1.0625rem, 1rem + 0.4vw, 1.3rem);
+    max-width: 40rem;
+    margin: 1.25rem auto 0;
+    color: #b6bacb;
+  }
+  .h-cta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 2rem;
+  }
+  .h-btn-glow {
+    box-shadow:
+      0 10px 30px -8px rgba(253, 65, 5, 0.7),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    padding: 0.95rem 1.5rem;
+  }
+  .h-btn-glow:hover {
+    transform: translateY(-1px);
+  }
+  .h-btn-glass {
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.06);
+    padding: 0.95rem 1.5rem;
+  }
+  .h-btn-glass:hover {
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.1);
+  }
+  .h-points {
+    list-style: none;
+    padding: 0;
+    margin: 1.75rem 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem 1.4rem;
+    font-size: 0.9375rem;
+    color: #c9ccd8;
+  }
+  .h-points li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .h-points :global(svg) {
+    width: 1rem;
+    height: 1rem;
+    color: #ff8a57;
+  }
+
+  .h-stage {
+    position: relative;
+    max-width: 62rem;
+    margin: clamp(3rem, 6vw, 4.5rem) auto 0;
+    perspective: 1600px;
+  }
+  .h-shot {
+    display: block;
+    width: 100%;
+    border-radius: 14px 14px 0 0;
+    box-shadow:
+      0 -1px 0 rgba(255, 255, 255, 0.12),
+      0 40px 120px -20px rgba(253, 65, 5, 0.45),
+      0 30px 60px -30px rgba(0, 0, 0, 0.8);
+    transform: rotateX(8deg);
+    transform-origin: 50% 100%;
+    transition: transform 1.2s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .h-stage:hover .h-shot {
+    transform: rotateX(2deg);
+  }
+  .h-chip {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.7rem 0.95rem 0.7rem 0.7rem;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 18px 40px -12px rgba(10, 12, 30, 0.45);
+    text-align: left;
+    color: var(--ink);
+    font-size: 0.875rem;
+    line-height: 1.25;
+    animation: h-float 6s ease-in-out infinite;
+  }
+  .h-chip b {
+    display: block;
+    font-family: var(--display);
+    font-weight: 600;
+  }
+  .h-chip small {
+    color: var(--muted);
+    font-size: 0.78rem;
+  }
+  .h-chip-a {
+    left: -3.5rem;
+    top: 18%;
+  }
+  .h-chip-b {
+    right: -3rem;
+    top: 42%;
+    animation-delay: -2s;
+  }
+  .h-chip-c {
+    left: 8%;
+    bottom: 10%;
+    animation-delay: -4s;
+  }
+  @keyframes h-float {
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+  .h-chip-ico {
+    display: grid;
+    place-items: center;
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 10px;
+    color: #fff;
+    flex: none;
+  }
+  .h-chip-ico :global(svg) {
+    width: 1.15rem;
+    height: 1.15rem;
+  }
+  .h-ico-green {
+    background: linear-gradient(135deg, #34c38f, #1f9d6f);
+  }
+  .h-ico-orange {
+    background: linear-gradient(135deg, #ff7a3d, #fd4105);
+  }
+  .h-ico-violet {
+    background: linear-gradient(135deg, #a77bf3, #6d4ae0);
+  }
+  @media (max-width: 64rem) {
+    .h-chip-a {
+      left: 1rem;
+    }
+    .h-chip-b {
+      right: 1rem;
+    }
+  }
+  @media (max-width: 40rem) {
+    .h-chip {
+      display: none;
+    }
+  }
+
+  /* ---------------------------------------------------------- marquee */
+  .h-marquee {
+    padding-block: 2rem;
+    border-bottom: 1px solid var(--line-soft);
+    overflow: hidden;
+    text-align: center;
+  }
+  .h-marquee-label {
+    font-size: 0.8125rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 1rem;
+  }
+  .h-marquee-track {
+    display: flex;
+    width: max-content;
+    animation: h-scroll 32s linear infinite;
+    mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+  }
+  .h-marquee:hover .h-marquee-track {
+    animation-play-state: paused;
+  }
+  .h-marquee ul {
+    display: flex;
+    gap: 3rem;
+    list-style: none;
+    margin: 0;
+    padding: 0 1.5rem;
+  }
+  .h-marquee li {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.25rem;
+    color: #8a8fa6;
+    white-space: nowrap;
+    letter-spacing: -0.01em;
+  }
+  @keyframes h-scroll {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* ---------------------------------------------------------- pillars */
+  .h-pillars {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(14.5rem, 1fr));
+  }
+  .h-pillar {
+    position: relative;
+    padding: 1.6rem;
+    border-radius: 18px;
+    border: 1px solid var(--line);
+    background: linear-gradient(180deg, #fff 0%, #fbfbfd 100%);
+    transition:
+      transform 0.25s,
+      box-shadow 0.25s,
+      border-color 0.25s;
+  }
+  .h-pillar:hover {
+    transform: translateY(-4px);
+    border-color: rgba(253, 65, 5, 0.35);
+    box-shadow: 0 24px 50px -24px rgba(253, 65, 5, 0.35);
+  }
+  .h-pillar-ico {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 14px;
+    margin-bottom: 1.1rem;
+    color: #fff;
+    background: linear-gradient(135deg, #ff7a3d, #fd4105);
+    box-shadow: 0 10px 24px -10px rgba(253, 65, 5, 0.8);
+  }
+  .h-pillar:nth-child(2) .h-pillar-ico {
+    background: linear-gradient(135deg, #f0569b, #c2357a);
+    box-shadow: 0 10px 24px -10px rgba(240, 86, 155, 0.8);
+  }
+  .h-pillar:nth-child(3) .h-pillar-ico {
+    background: linear-gradient(135deg, #a77bf3, #6d4ae0);
+    box-shadow: 0 10px 24px -10px rgba(140, 90, 240, 0.8);
+  }
+  .h-pillar:nth-child(4) .h-pillar-ico {
+    background: linear-gradient(135deg, #4fc7c8, #23949a);
+    box-shadow: 0 10px 24px -10px rgba(60, 180, 185, 0.8);
+  }
+  .h-pillar-ico :global(svg) {
+    width: 1.4rem;
+    height: 1.4rem;
+  }
+  .h-pillar p {
+    color: var(--muted);
+    font-size: 0.9688rem;
+  }
+
+  /* ---------------------------------------------------------- tour */
+  .h-tour-section {
+    background:
+      radial-gradient(60% 50% at 50% 0%, rgba(253, 65, 5, 0.07), transparent 70%),
+      var(--raised);
+  }
+  .h-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.4rem;
+    margin: 0 auto 1.75rem;
+    width: fit-content;
+    max-width: 100%;
+    border-radius: 999px;
+    background: #fff;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+  }
+  .h-tabs button {
+    font: 500 0.9375rem/1 var(--display);
+    color: var(--body);
+    background: none;
+    border: 0;
+    border-radius: 999px;
+    padding: 0.7rem 1.05rem;
+    cursor: pointer;
+    transition:
+      background 0.2s,
+      color 0.2s;
+  }
+  .h-tabs button:hover {
+    background: var(--raised);
+  }
+  .h-tabs button[aria-selected='true'] {
+    background: var(--ink);
+    color: #fff;
+  }
+  @media (max-width: 48rem) {
+    .h-tabs {
+      border-radius: 16px;
+    }
+  }
+  .h-panel {
+    display: grid;
+    gap: 1.5rem;
+    animation: h-in 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .h-panel[hidden] {
+    display: none;
+  }
+  @keyframes h-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px) scale(0.99);
+    }
+  }
+  .h-panel-copy {
+    text-align: center;
+    max-width: 40rem;
+    margin-inline: auto;
+  }
+  .h-panel-copy h3 {
+    font-size: 1.35rem;
+  }
+  .h-panel-copy p {
+    color: var(--muted);
+    margin-bottom: 0.6rem;
+  }
+  .h-panel-copy a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .h-panel img {
+    width: 100%;
+    border-radius: 14px;
+    box-shadow:
+      0 0 0 1px rgba(18, 20, 28, 0.06),
+      0 30px 80px -30px rgba(18, 20, 28, 0.45);
+  }
+
+  /* ---------------------------------------------------------- flow */
+  .h-flow {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: repeat(5, 1fr);
+    position: relative;
+  }
+  .h-flow::before {
+    content: '';
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    right: 1.5rem;
+    height: 2px;
+    background: linear-gradient(90deg, #fd4105, #f0569b, #a77bf3, #5ec8c9);
+    opacity: 0.5;
+  }
+  .h-flow li {
+    position: relative;
+  }
+  .h-flow-n {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid var(--accent);
+    color: var(--accent-ink);
+    font: 700 0.95rem var(--display);
+    margin-bottom: 1rem;
+    position: relative;
+    box-shadow: 0 0 0 6px #fff;
+  }
+  .h-flow li:last-child .h-flow-n {
+    background: var(--accent);
+    color: #fff;
+  }
+  .h-flow h3 {
+    font-size: 1.15rem;
+    margin-bottom: 0.35rem;
+  }
+  .h-flow p {
+    font-size: 0.9375rem;
+    color: var(--muted);
+  }
+  @media (max-width: 56rem) {
+    .h-flow {
+      grid-template-columns: 1fr;
+      gap: 1.75rem;
+      padding-left: 4rem;
+    }
+    .h-flow::before {
+      top: 0.5rem;
+      bottom: 0.5rem;
+      left: 1.5rem;
+      right: auto;
+      width: 2px;
+      height: auto;
+      background: linear-gradient(180deg, #fd4105, #f0569b, #a77bf3, #5ec8c9);
+    }
+    .h-flow-n {
+      position: absolute;
+      left: -4rem;
+      top: -0.4rem;
+    }
+  }
+
+  /* ---------------------------------------------------------- dark band */
+  .h-dark {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    background: #0b0d14;
+    color: #c9ccd8;
+    padding-block: clamp(4rem, 8vw, 6.5rem);
+  }
+  .h-dark h2 {
+    color: #fff;
+  }
+  .h-dark-glow {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(40% 50% at 15% 100%, rgba(253, 65, 5, 0.3), transparent 70%),
+      radial-gradient(40% 50% at 90% 0%, rgba(140, 70, 230, 0.3), transparent 70%);
+  }
+  .h-eyebrow-light {
+    color: #ff8a57;
+  }
+  .h-stats {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 1px;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    border-radius: 18px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .h-stats li {
+    padding: 1.6rem 1.25rem;
+    background: rgba(11, 13, 20, 0.85);
+    text-align: center;
+  }
+  .h-stat-n {
+    display: block;
+    font: 700 clamp(2.4rem, 1.8rem + 2vw, 3.4rem) / 1 var(--display);
+    letter-spacing: -0.04em;
+    background: linear-gradient(180deg, #fff 30%, #ff9a6b);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .h-stat-l {
+    display: block;
+    color: #fff;
+    font-weight: 500;
+    margin-top: 0.5rem;
+  }
+  .h-stat-s {
+    display: block;
+    font-size: 0.8125rem;
+    color: #8a8fa6;
+  }
+  .h-dark-meta {
+    text-align: center;
+    font-size: 0.8125rem;
+    color: #8a8fa6;
+    margin-top: 1rem;
+  }
+  .h-dark-meta a {
+    color: #c9ccd8;
+  }
+  .h-reel {
+    margin: clamp(3rem, 6vw, 4.5rem) auto 0;
+    max-width: 58rem;
+  }
+  .h-reel video {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 18px;
+    background: #12141c;
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.08),
+      0 40px 100px -30px rgba(253, 65, 5, 0.45);
+  }
+  .h-reel figcaption {
+    text-align: center;
+    font-size: 0.8125rem;
+    color: #8a8fa6;
+    margin-top: 0.85rem;
+  }
+
+  /* ---------------------------------------------------------- features */
+  .h-features {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  }
+  .h-feature {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    border-radius: 18px;
+    border: 1px solid var(--line);
+    background: #fff;
+    color: inherit;
+    text-decoration: none;
+    transition:
+      transform 0.25s,
+      box-shadow 0.25s,
+      border-color 0.25s;
+  }
+  .h-feature:hover {
+    color: inherit;
+    transform: translateY(-4px);
+    border-color: rgba(253, 65, 5, 0.4);
+    box-shadow: 0 24px 50px -26px rgba(18, 20, 28, 0.35);
+  }
+  .h-feature-n {
+    font: 600 0.8125rem var(--mono);
+    color: var(--accent);
+    margin-bottom: 0.9rem;
+  }
+  .h-feature h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.4rem;
+  }
+  .h-feature p {
+    font-size: 0.9375rem;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+  .h-feature-more {
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--accent-ink);
+  }
+  .h-feature:hover .h-feature-more :global(svg) {
+    transform: translateX(3px);
+  }
+  .h-feature-more :global(svg) {
+    transition: transform 0.2s;
+  }
+
+  /* ---------------------------------------------------------- split blocks */
+  .h-split {
+    display: grid;
+    gap: clamp(2rem, 5vw, 4rem);
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+  }
+  @media (max-width: 56rem) {
+    .h-split {
+      grid-template-columns: 1fr;
+    }
+    .h-split-rev > :first-child {
+      order: 2;
+    }
+  }
+
+  /* ---------------------------------------------------------- data boundary */
+  .h-boundary {
+    display: grid;
+    gap: 1rem;
+  }
+  .h-server {
+    border-radius: 18px;
+    padding: 1.4rem;
+    background: #0b0d14;
+    color: #c9ccd8;
+    background-image: radial-gradient(70% 90% at 100% 0%, rgba(253, 65, 5, 0.28), transparent 70%);
+    box-shadow: 0 30px 60px -30px rgba(11, 13, 20, 0.7);
+  }
+  .h-server-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font: 600 1.05rem var(--display);
+    color: #fff;
+    margin-bottom: 0.9rem;
+  }
+  .h-server-title :global(svg) {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: #ff8a57;
+  }
+  .h-server ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .h-server li {
+    font-size: 0.875rem;
+    padding: 0.4rem 0.7rem;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .h-server code {
+    background: none;
+    border: 0;
+    padding: 0;
+    color: #ff9a6b;
+    margin-right: 0.25rem;
+  }
+  .h-exits {
+    list-style: none;
+    padding: 0 0 0 1.75rem;
+    margin: 0;
+    display: grid;
+    gap: 0.75rem;
+    position: relative;
+  }
+  .h-exits::before {
+    content: '';
+    position: absolute;
+    left: 0.6rem;
+    top: -1rem;
+    bottom: 1.6rem;
+    width: 2px;
+    background: linear-gradient(180deg, #fd4105, rgba(253, 65, 5, 0.2));
+  }
+  .h-exits li {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.85rem 1rem;
+    border-radius: 14px;
+    background: #fff;
+    border: 1px solid var(--line);
+  }
+  .h-exits li::before {
+    content: '';
+    position: absolute;
+    left: -1.15rem;
+    top: 50%;
+    width: 1.15rem;
+    height: 2px;
+    background: rgba(253, 65, 5, 0.6);
+  }
+  .h-exit-dashed {
+    border-style: dashed !important;
+  }
+  .h-exits b {
+    display: block;
+    color: var(--ink);
+    font-family: var(--display);
+    font-weight: 600;
+  }
+  .h-exits small {
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  .h-exit-ico {
+    display: grid;
+    place-items: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 12px;
+    background: var(--tint);
+    color: var(--accent-ink);
+    flex: none;
+  }
+  .h-exit-ico :global(svg) {
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+
+  /* ---------------------------------------------------------- terminal */
+  .h-term {
+    border-radius: 16px;
+    overflow: hidden;
+    background: #0d0f17;
+    box-shadow:
+      0 0 0 1px rgba(18, 20, 28, 0.1),
+      0 40px 80px -30px rgba(11, 13, 20, 0.6);
+  }
+  .h-term-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.8rem 1rem;
+    background: #171a24;
+  }
+  .h-term-bar span {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+    background: #ff5f57;
+  }
+  .h-term-bar span:nth-child(2) {
+    background: #febc2e;
+  }
+  .h-term-bar span:nth-child(3) {
+    background: #28c840;
+  }
+  .h-term-bar p {
+    margin: 0 auto;
+    padding-right: 3rem;
+    font: 0.8rem var(--mono);
+    color: #7c8197;
+  }
+  .h-term pre {
+    margin: 0;
+    border-radius: 0;
+    background: none;
+    padding: 1.25rem 1.25rem 1.5rem;
+    font-size: 0.8rem;
+    line-height: 1.8;
+    min-height: 19rem;
+  }
+  .h-line {
+    display: block;
+    color: #d5d8e3;
+  }
+  .h-line.dim {
+    color: #6b7088;
+  }
+  .h-line.cmd {
+    color: #fff;
+  }
+  .h-line.ok {
+    color: #7ee0a5;
+  }
+  .h-line.done {
+    color: #ff9a6b;
+    font-weight: 600;
+  }
+  :global(html.js) [data-term] .h-line {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+  :global(html.js) [data-term].in .h-line {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 0.35s ease calc(var(--i) * 260ms + 300ms),
+      transform 0.35s ease calc(var(--i) * 260ms + 300ms);
+  }
+  .h-specs {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+  .h-specs li {
+    padding: 0.9rem 1rem;
+    border-radius: 14px;
+    border: 1px solid var(--line);
+    background: var(--raised);
+  }
+  .h-specs b {
+    display: block;
+    font: 700 1.35rem var(--display);
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  .h-specs small {
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
+  /* ---------------------------------------------------------- pricing */
+  .h-pricing {
+    background:
+      radial-gradient(50% 40% at 50% 0%, rgba(253, 65, 5, 0.08), transparent 70%),
+      #fff;
+  }
+  .h-plans {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(14.5rem, 1fr));
+    align-items: stretch;
+  }
+  .h-plan {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 1.6rem;
+    border-radius: 20px;
+    border: 1px solid var(--line);
+    background: #fff;
+    transition:
+      transform 0.25s,
+      box-shadow 0.25s;
+  }
+  .h-plan:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 24px 50px -26px rgba(18, 20, 28, 0.3);
+  }
+  .h-plan-hot {
+    background: #0b0d14;
+    color: #c9ccd8;
+    border-color: transparent;
+    background-image: radial-gradient(80% 60% at 100% 0%, rgba(253, 65, 5, 0.35), transparent 70%);
+    box-shadow: 0 30px 70px -25px rgba(253, 65, 5, 0.55);
+  }
+  .h-plan-hot h3,
+  .h-plan-hot .h-price {
+    color: #fff;
+  }
+  .h-plan-hot li {
+    border-color: rgba(255, 255, 255, 0.08) !important;
+  }
+  .h-plan-badge {
+    position: absolute;
+    top: -0.75rem;
+    left: 1.6rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #fff;
+    padding: 0.3rem 0.65rem;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #fd4105, #f0569b);
+  }
+  .h-price {
+    font: 700 2.6rem/1 var(--display);
+    color: var(--ink);
+    letter-spacing: -0.04em;
+    margin: 0.6rem 0 0.25rem;
+  }
+  .h-per {
+    font-size: 0.875rem;
+    color: var(--muted);
+    margin-bottom: 1.1rem;
+  }
+  .h-plan-hot .h-per {
+    color: #8a8fa6;
+  }
+  .h-plan ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.4rem;
+    font-size: 0.9rem;
+  }
+  .h-plan li {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.45rem 0;
+    border-top: 1px solid var(--line-soft);
+  }
+  .h-plan li:first-child {
+    border-top: 0;
+  }
+  .h-plan li :global(svg),
+  .h-every li :global(svg) {
+    width: 1rem;
+    height: 1rem;
+    flex: none;
+    margin-top: 0.25rem;
+    color: var(--accent);
+  }
+  .h-plan .btn {
+    margin-top: auto;
+  }
+  .h-every {
+    margin: 2rem 0 1.25rem;
+    padding: 1.5rem;
+    border-radius: 18px;
+    background: var(--raised);
+    border: 1px solid var(--line);
+  }
+  .h-every ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.6rem 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+    font-size: 0.9375rem;
+  }
+  .h-every li {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  /* ---------------------------------------------------------- story */
+  .h-story {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    margin: 0;
+    padding: clamp(2rem, 5vw, 3.5rem);
+    border-radius: 24px;
+    background: #0b0d14;
+    color: #c9ccd8;
+  }
+  .h-story-glow {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(50% 70% at 0% 100%, rgba(253, 65, 5, 0.35), transparent 70%),
+      radial-gradient(40% 60% at 100% 0%, rgba(167, 123, 243, 0.3), transparent 70%);
+  }
+  .h-story blockquote {
+    margin: 0;
+    font: 500 clamp(1.25rem, 1rem + 1vw, 1.75rem) / 1.4 var(--display);
+    letter-spacing: -0.02em;
+    color: #fff;
+    max-width: 52rem;
+  }
+  .h-story figcaption {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    margin-top: 1.75rem;
+  }
+  .h-story figcaption img {
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+  }
+  .h-story figcaption b {
+    display: block;
+    color: #fff;
+  }
+  .h-story figcaption small {
+    color: #8a8fa6;
+  }
+  .h-story-stats {
+    list-style: none;
+    padding: 1.75rem 0 0;
+    margin: 1.75rem 0 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  }
+  .h-story-stats b {
+    display: block;
+    font: 700 2.2rem/1 var(--display);
+    letter-spacing: -0.03em;
+    color: #ff9a6b;
+  }
+  .h-story-stats small {
+    color: #b6bacb;
+  }
+  .h-story-src {
+    margin-top: 1.5rem;
+    font-size: 0.8125rem;
+    color: #8a8fa6;
+  }
+  .h-story-src a {
+    color: #c9ccd8;
+  }
+
+  /* ---------------------------------------------------------- stack */
+  .h-stack {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.5rem;
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  }
+  .h-stack li {
+    padding: 1rem 1.1rem;
+    border-radius: 14px;
+    border: 1px solid var(--line);
+    background: #fff;
+    transition: border-color 0.2s;
+  }
+  .h-stack li:hover {
+    border-color: var(--accent);
+  }
+  .h-stack b {
+    display: block;
+    font-family: var(--display);
+    color: var(--ink);
+  }
+  .h-stack small {
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
+  /* ---------------------------------------------------------- faq */
+  .h-faq {
+    display: grid;
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    align-items: start;
+  }
+  .h-faq :global(.faq) {
+    background: #fff;
+    border-radius: 18px;
+  }
+  @media (max-width: 56rem) {
+    .h-faq {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ---------------------------------------------------------- final */
+  .h-final {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    background: #0b0d14;
+    color: #b6bacb;
+    text-align: center;
+    padding-block: clamp(4.5rem, 10vw, 7.5rem);
+  }
+  .h-final :global(.h-final-mark) {
+    width: 3.5rem;
+    height: 3.5rem;
+    margin-bottom: 1.5rem;
+    filter: drop-shadow(0 10px 30px rgba(253, 65, 5, 0.6));
+  }
+  .h-final h2 {
+    color: #fff;
+    font-size: clamp(2.1rem, 1.2rem + 3.4vw, 3.8rem);
+    letter-spacing: -0.04em;
+    max-width: 18ch;
+    margin-inline: auto;
+  }
+  .h-final p {
+    max-width: 38rem;
+    margin-inline: auto;
+  }
+</style>

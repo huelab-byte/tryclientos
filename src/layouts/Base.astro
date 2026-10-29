@@ -110,7 +110,7 @@ const graph = [...(breadcrumbSchema ? [breadcrumbSchema] : []), ...schema];
     }
   </head>
 
-  <body>
+  <body class={crumbs.length > 1 ? 'has-crumbs' : undefined}>
     <a class="skip" href="#main">Skip to content</a>
     <Header />
 

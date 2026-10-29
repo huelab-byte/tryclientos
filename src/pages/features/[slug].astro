@@ -1,8 +1,20 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Cta from '../../components/Cta.astro';
-import { AUDIT_DATE, AUDIT_DATE_ISO, docsUrl, features, officialUrl, taglines } from '../../content/site';
+import Icon from '../../components/Icon.astro';
+import Reveal from '../../components/Reveal.astro';
+import {
+  AUDIT_DATE,
+  AUDIT_DATE_ISO,
+  demoUrl,
+  docsUrl,
+  features,
+  officialUrl,
+  taglines,
+} from '../../content/site';
+import { featureStyle, toneStyle } from '../../lib/feature-style';
 import { softwareApplication, webPage } from '../../lib/schema';
+import '../../styles/features.css';
 
 export function getStaticPaths() {
   return features.map((feature) => ({
@@ -19,6 +31,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
    pages carry the same one. */
 const tagline = taglines[features.indexOf(feature) % taglines.length];
 
+const style = featureStyle[feature.slug];
+const [mainScreen, secondScreen] = style.screens;
 const others = features.filter((f) => f.slug !== feature.slug);
 ---
 
@@ -41,81 +55,181 @@ const others = features.filter((f) => f.slug !== feature.slug);
     softwareApplication(canonical),
   ]}
 >
-  <section class="hero">
-    <div class="wrap">
-      <p class="eyebrow">{feature.nav}</p>
-      <h1>{feature.h1}</h1>
-      <p class="lede">{feature.lede}</p>
-      <p class="meta" style="margin-top:1.25rem">{tagline}</p>
-    </div>
-  </section>
-
-  <section>
-    <div class="wrap">
-      <ul class="points">
-        {
-          feature.points.map((point) => (
-            <li>
-              <h3>{point.title}</h3>
-              <p>{point.body}</p>
-            </li>
-          ))
-        }
-      </ul>
-
-      <div class="note" style="margin-top:2.25rem">
-        <p>
-          <strong>Where this comes from.</strong> {feature.area}, read on {AUDIT_DATE}. Check any
-          line of it against
-          <a
-            href={officialUrl(`feature_${feature.slug}`, `/features#${feature.anchor}`)}
-            rel="noopener"
-          >
-            that section of getclientos.com/features
-          </a>
-          or the
-          <a href={docsUrl(`feature_${feature.slug}`, feature.docs)} rel="noopener">
-            official docs for this area</a>. Nothing on this page adds a capability those pages do not state.
-        </p>
+  <div class="fx-page" style={toneStyle(feature.slug)}>
+    <section class="fx-dhero">
+      <div class="wrap">
+        <div class="fx-dhero-top" data-reveal>
+          <span class="fx-ico fx-ico-lg"><Icon name={style.icon} /></span>
+          <div>
+            <p class="eyebrow">{feature.nav}</p>
+            <h1>{feature.h1}</h1>
+            <p class="lede">{feature.lede}</p>
+            <p class="fx-tagline"><Icon name="sparkle" /> {tagline}</p>
+            <div class="btn-row">
+              <a class="btn btn-primary" href={demoUrl(`feature_${feature.slug}_hero`)} rel="noopener">
+                Try it in the demo <Icon name="arrow" />
+              </a>
+              <a
+                class="btn btn-secondary"
+                href={docsUrl(`feature_${feature.slug}_hero`, feature.docs)}
+                rel="noopener"
+              >
+                Read the docs
+              </a>
+            </div>
+          </div>
+        </div>
+        <figure class="fx-shot fx-dhero-shot" data-reveal style="--d:150ms">
+          <img
+            src={`${base}/screens/${mainScreen}.webp`}
+            width="1600"
+            height="764"
+            alt={`ClientOS — ${feature.nav.toLowerCase()}`}
+            fetchpriority="high"
+          />
+        </figure>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="section-raised">
-    <div class="wrap">
-      <h2>Runs on your own server, either way</h2>
-      <p class="lede">
-        Every feature above runs inside one installation on a Linux VPS you control, on one domain
-        of your own. Clients, orders, messages, invoices and files live in your PostgreSQL database;
-        the only thing that leaves it is a license check-in twice a day carrying the signed license
-        and the version you run. There is no per-seat charge for any of it — the licence is counted
-        per domain, and every package states unlimited clients, staff and orders.
-      </p>
-      <div class="btn-row">
-        <a class="btn btn-secondary" href={`${base}/features/self-hosting-and-install/`}>
-          How the install works
-        </a>
-        <a class="btn btn-secondary" href={`${base}/pricing/`}>What it costs</a>
-      </div>
-    </div>
-  </section>
+    <section class="fx-section">
+      <div class="wrap">
+        <div class="fx-head" data-reveal>
+          <p class="eyebrow">What you get</p>
+          <h2 class="fx-h2">{feature.points.length} things {feature.nav.toLowerCase()} does</h2>
+        </div>
+        <ul class="fx-points">
+          {
+            feature.points.map((point, i) => (
+              <li data-reveal style={`--d:${(i % 3) * 80}ms`}>
+                <span class="fx-ico">
+                  <Icon name={style.points[i]} />
+                </span>
+                <h3>{point.title}</h3>
+                <p>{point.body}</p>
+              </li>
+            ))
+          }
+        </ul>
 
-  <section>
-    <div class="wrap">
-      <h2>The other feature areas</h2>
-      <div class="grid">
-        {
-          others.map((f) => (
-            <a class="card card-link" href={`${base}/features/${f.slug}/`}>
-              <h3>{f.nav}</h3>
-              <p>{f.description}</p>
-              <span class="card-more">Read more →</span>
+        <div class="fx-source" data-reveal>
+          <span class="fx-ico fx-ico-sm fx-ico-soft"><Icon name="shieldCheck" /></span>
+          <p>
+            <strong>Where this comes from.</strong> {feature.area}, read on {AUDIT_DATE}. Check any
+            line of it against
+            <a
+              href={officialUrl(`feature_${feature.slug}`, `/features#${feature.anchor}`)}
+              rel="noopener"
+            >
+              that section of getclientos.com/features
             </a>
-          ))
-        }
+            or the
+            <a href={docsUrl(`feature_${feature.slug}`, feature.docs)} rel="noopener">
+              official docs for this area</a>. Nothing on this page adds a capability those pages do not state.
+          </p>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <Cta utm={`feature_${feature.slug}`} />
+    {
+      secondScreen && (
+        <section class="fx-section fx-raised">
+          <div class="wrap fx-split">
+            <div data-reveal>
+              <p class="eyebrow">In the product</p>
+              <h2 class="fx-h2">See it in ClientOS</h2>
+              <p class="lede">{feature.description}</p>
+              <a class="fx-more" href={demoUrl(`feature_${feature.slug}_screen`)} rel="noopener">
+                Click through it in the instant demo <Icon name="arrow" />
+              </a>
+            </div>
+            <figure class="fx-shot" data-reveal style="--d:120ms;isolation:isolate">
+              <img
+                src={`${base}/screens/${secondScreen}.webp`}
+                width="1600"
+                height="764"
+                alt={`ClientOS — another ${feature.nav.toLowerCase()} screen`}
+                loading="lazy"
+              />
+            </figure>
+          </div>
+        </section>
+      )
+    }
+
+    <section class="fx-dark">
+      <div class="fx-dark-glow" aria-hidden="true"></div>
+      <div class="wrap">
+        <div class="fx-head" data-reveal>
+          <p class="eyebrow">Either way</p>
+          <h2 class="fx-h2">Runs on your own server</h2>
+          <p class="lede">
+            Every feature above runs inside one installation on a Linux VPS you control, on one
+            domain of your own.
+          </p>
+        </div>
+        <ul class="fx-facts">
+          <li data-reveal>
+            <span class="fx-ico fx-ico-sm"><Icon name="database" /></span>
+            <span>
+              <b>Your database</b>
+              <small>Clients, orders, messages, invoices and files live in your own PostgreSQL.</small>
+            </span>
+          </li>
+          <li data-reveal style="--d:80ms">
+            <span class="fx-ico fx-ico-sm"><Icon name="key" /></span>
+            <span>
+              <b>One thing leaves it</b>
+              <small>A license check-in twice a day: the signed license and the version you run.</small>
+            </span>
+          </li>
+          <li data-reveal style="--d:160ms">
+            <span class="fx-ico fx-ico-sm"><Icon name="users" /></span>
+            <span>
+              <b>No per-seat charge</b>
+              <small>Licensed per domain; every package states unlimited clients, staff and orders.</small>
+            </span>
+          </li>
+        </ul>
+        <div class="btn-row">
+          <a class="btn btn-secondary" href={`${base}/features/self-hosting-and-install/`}>
+            How the install works
+          </a>
+          <a class="btn btn-secondary" href={`${base}/pricing/`}>What it costs</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="fx-section">
+      <div class="wrap">
+        <div class="fx-head" data-reveal>
+          <p class="eyebrow">Keep exploring</p>
+          <h2 class="fx-h2">The other feature areas</h2>
+        </div>
+        <div class="fx-cards">
+          {
+            others.map((f, i) => (
+              <a
+                class="fx-card"
+                href={`${base}/features/${f.slug}/`}
+                data-reveal
+                style={`--d:${(i % 4) * 60}ms;${toneStyle(f.slug)}`}
+              >
+                <span class="fx-ico">
+                  <Icon name={featureStyle[f.slug].icon} />
+                </span>
+                <h3>{f.nav}</h3>
+                <p>{f.description}</p>
+                <span class="fx-more">
+                  Read more <Icon name="arrow" />
+                </span>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <Cta utm={`feature_${feature.slug}`} />
+  </div>
+  <Reveal />
 </Base>

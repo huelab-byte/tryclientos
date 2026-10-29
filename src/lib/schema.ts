@@ -46,7 +46,7 @@ export function softwareApplication(url: string) {
         name: `ClientOS ${p.name}`,
         price: p.priceNumber,
         priceCurrency: 'USD',
-        url: `${site.official}/#pricing`,
+        url: p.buyUrl ?? `${site.official}/#pricing`,
         availability: 'https://schema.org/InStock',
         description: `One-time license, ${p.updates.toLowerCase()}.`,
       })),

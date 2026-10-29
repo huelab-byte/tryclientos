@@ -1,19 +1,53 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Cta from '../../components/Cta.astro';
+import Icon from '../../components/Icon.astro';
+import Reveal from '../../components/Reveal.astro';
 import {
   AUDIT_DATE,
   byTheNumbers,
+  demoUrl,
   featureScope,
   features,
   officialUrl,
   taglines,
 } from '../../content/site';
+import { featureStyle, toneStyle } from '../../lib/feature-style';
+import type { IconName } from '../../lib/icons';
 import { itemList, softwareApplication } from '../../lib/schema';
+import '../../styles/features.css';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const origin = Astro.site!.origin;
+
+const nots: { icon: IconName; title: string; body: string }[] = [
+  {
+    icon: 'code',
+    title: 'Not open source',
+    body: 'ClientOS ships as ready-built, SHA-256-verified Docker images with a one-command installer. The source code is not provided; custom work is quoted.',
+  },
+  {
+    icon: 'globe',
+    title: 'Not multilingual',
+    body: 'The interface is in English. You can rename the words your clients read — menu labels and headings — but there is no second interface language.',
+  },
+  {
+    icon: 'server',
+    title: 'Not managed hosting',
+    body: 'You own the VPS, and nothing runs your backups until you schedule them. On Premium and Custom the team installs it for you, but the server stays yours.',
+  },
+  {
+    icon: 'file',
+    title: 'No published API reference',
+    body: 'The API runs on your own domain at /v1 as part of the product, but no public API documentation is published.',
+  },
+  {
+    icon: 'clock',
+    title: 'No trial of the licence',
+    body: 'The demo is read-only, loaded with sample data and lasts 3 days; the product itself is a purchase.',
+  },
+];
 ---
 
 <Base
@@ -29,95 +63,145 @@ const origin = Astro.site!.origin;
     ),
   ]}
 >
-  <section class="hero">
-    <div class="wrap">
-      <p class="eyebrow">Features</p>
-      <h1>Everything an agency runs on, in one portal you own</h1>
-      <p class="lede">
-        getclientos.com publishes {featureScope}. This is that list grouped into the eight areas
-        that actually decide a portal purchase. Every page names which numbered areas of the
-        official feature list it summarises, so you can check any claim at the source.
-      </p>
-      <p class="meta" style="margin-top:1.25rem">
-        {taglines[2]} · Facts checked {AUDIT_DATE} against
-        <a href={officialUrl('features_hub')} rel="noopener">getclientos.com/features</a>.
-      </p>
-    </div>
-  </section>
+  <div class="fx-page">
+    <section class="fx-hero">
+      <div class="fx-glow" aria-hidden="true"></div>
+      <div class="fx-grid" aria-hidden="true"></div>
+      <div class="wrap">
+        <p class="fx-pill" data-reveal><Icon name="sparkle" /> {featureScope}</p>
+        <h1 data-reveal>Everything an agency runs on, <span class="fx-grad">in one portal you own</span></h1>
+        <p class="lede" data-reveal>
+          getclientos.com publishes {featureScope}. Here they are grouped into the eight areas that
+          actually decide a portal purchase — each with real screens from the product.
+        </p>
+        <p class="meta" data-reveal>
+          {taglines[2]} · Facts checked {AUDIT_DATE} against
+          <a href={officialUrl('features_hub')} rel="noopener">getclientos.com/features</a>.
+        </p>
+        <ul class="fx-jump">
+          {
+            features.map((f, i) => (
+              <li data-reveal style={`--d:${i * 50}ms;${toneStyle(f.slug)}`}>
+                <a href={`#${f.slug}`}>
+                  <span class="fx-ico fx-ico-sm">
+                    <Icon name={featureStyle[f.slug].icon} />
+                  </span>
+                  {f.nav}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
 
-  <section>
-    <div class="wrap">
-      <div class="grid">
+    <section class="fx-section" style="padding-block:0">
+      <div class="wrap">
         {
-          features.map((f) => (
-            <a class="card card-link" href={`${base}/features/${f.slug}/`}>
-              <h3>{f.nav}</h3>
-              <p>{f.lede}</p>
-              <span class="card-more">{f.h1} →</span>
-            </a>
-          ))
+          features.map((f, i) => {
+            const s = featureStyle[f.slug];
+            return (
+              <article class="fx-row" id={f.slug} style={toneStyle(f.slug)}>
+                <div class="fx-row-copy" data-reveal>
+                  <div class="fx-kicker">
+                    <span class="fx-ico">
+                      <Icon name={s.icon} />
+                    </span>
+                    <span>
+                      {String(i + 1).padStart(2, '0')} · {f.nav}
+                    </span>
+                  </div>
+                  <h2>{f.h1}</h2>
+                  <p>{f.lede}</p>
+                  <ul class="fx-mini">
+                    {f.points.slice(0, 4).map((p, j) => (
+                      <li>
+                        <span class="fx-ico fx-ico-soft">
+                          <Icon name={s.points[j]} />
+                        </span>
+                        {p.title}
+                      </li>
+                    ))}
+                  </ul>
+                  <a class="fx-more" href={`${base}/features/${f.slug}/`}>
+                    Explore {f.nav.toLowerCase()} <Icon name="arrow" />
+                  </a>
+                </div>
+                <figure class="fx-shot" data-reveal style="--d:120ms">
+                  <img
+                    src={`${base}/screens/${s.screens[0]}.webp`}
+                    width="1600"
+                    height="764"
+                    alt={`ClientOS — ${f.nav.toLowerCase()}`}
+                    loading={i < 2 ? 'eager' : 'lazy'}
+                  />
+                </figure>
+              </article>
+            );
+          })
         }
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="section-raised">
-    <div class="wrap">
-      <h2>The counts ClientOS publishes</h2>
-      <ul class="numbers" style="margin-top:1.5rem">
-        {
-          byTheNumbers.map((n) => (
-            <li>
-              <span class="n">{n.value}</span>
-              <span class="l">{n.label}</span>
-              <span class="s">{n.note}</span>
-            </li>
-          ))
-        }
-      </ul>
-      <p class="meta" style="margin-top:1rem">
-        Two of these are checkable in the docs and both add up: the 17 form field types break down
-        into 5 client-profile, 9 project-data and 3 layout fields, and the 7 optional modules are
-        the help desk, messages, coupons, subscriptions, forms, traffic tracking and the referral
-        programme. Orders and clients are core and cannot be switched off.
-      </p>
-    </div>
-  </section>
+    <section class="fx-dark">
+      <div class="fx-dark-glow" aria-hidden="true"></div>
+      <div class="wrap">
+        <div class="fx-head fx-head-center" data-reveal>
+          <p class="eyebrow">By the numbers</p>
+          <h2 class="fx-h2">The counts ClientOS publishes</h2>
+        </div>
+        <ul class="fx-stats">
+          {
+            byTheNumbers.map((n, i) => (
+              <li data-reveal style={`--d:${i * 70}ms`}>
+                <b>{n.value}</b>
+                <span>{n.label}</span>
+                <small>{n.note}</small>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="fx-dark-meta">
+          Two of these are checkable in the docs and both add up: the 17 form field types break
+          down into 5 client-profile, 9 project-data and 3 layout fields, and the 7 optional modules
+          are the help desk, messages, coupons, subscriptions, forms, traffic tracking and the
+          referral programme. Orders and clients are core and cannot be switched off.
+        </p>
+      </div>
+    </section>
 
-  <section>
-    <div class="wrap">
-      <h2>What ClientOS is not</h2>
-      <p class="lede">
-        Worth knowing before you spend a week evaluating it. None of this is a criticism — it is
-        what the vendor itself states, or does not state, and all of it is easier to find out now
-        than after you buy.
-      </p>
-      <ul class="checks" style="margin-top:1.25rem">
-        <li>
-          <strong>Not open source.</strong> ClientOS ships as ready-built, SHA-256-verified Docker
-          images with a one-command installer. The source code is not provided; custom work is
-          quoted.
-        </li>
-        <li>
-          <strong>Not multilingual.</strong> The interface is in English. You can rename the words
-          your clients read — menu labels and headings — but there is no second interface language.
-        </li>
-        <li>
-          <strong>Not managed hosting.</strong> You own the VPS, and the docs are explicit that
-          nothing runs your backups until you schedule them. On Premium and Custom the ClientOS
-          team installs it for you, but the server stays yours.
-        </li>
-        <li>
-          <strong>No published API reference.</strong> The API runs on your own domain at
-          <code>/v1</code> as part of the product, but no public API documentation is published.
-        </li>
-        <li>
-          <strong>No trial of the licence.</strong> The demo is read-only, loaded with sample data
-          and lasts 3 days; the product itself is a purchase.
-        </li>
-      </ul>
-    </div>
-  </section>
+    <section class="fx-section fx-raised">
+      <div class="wrap">
+        <div class="fx-head" data-reveal>
+          <p class="eyebrow">Before you evaluate</p>
+          <h2 class="fx-h2">What ClientOS is not</h2>
+          <p class="lede">
+            None of this is a criticism — it is what the vendor itself states, or does not state,
+            and all of it is easier to find out now than after you buy.
+          </p>
+        </div>
+        <ul class="fx-nots">
+          {
+            nots.map((n, i) => (
+              <li data-reveal style={`--d:${i * 60}ms`}>
+                <span class="fx-ico fx-ico-sm">
+                  <Icon name={n.icon} />
+                </span>
+                <strong>{n.title}</strong>
+                {n.body}
+              </li>
+            ))
+          }
+        </ul>
+        <div class="btn-row">
+          <a class="btn btn-primary" href={demoUrl('features_hub_demo')} rel="noopener">
+            See every feature in the demo <Icon name="arrow" />
+          </a>
+        </div>
+      </div>
+    </section>
 
-  <Cta utm="features_hub" />
+    <Cta utm="features_hub" />
+  </div>
+  <Reveal />
 </Base>

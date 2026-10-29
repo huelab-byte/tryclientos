@@ -63,9 +63,9 @@ const pricingFaq = faq.filter((f) =>
     <div class="wrap">
       <div class="note">
         <p>
-          <strong>This is a summary, not the order form.</strong> These are the four packages as
-          published on getclientos.com on {AUDIT_DATE}, reproduced here so you can compare them with
-          a subscription. Buy, and check the current numbers, on the
+          These are the four packages as published on getclientos.com on {AUDIT_DATE}. Each
+          <strong>Buy</strong> button opens that package’s checkout on vibemonk.com, ClientOS’s
+          maker; the current numbers are always on the
           <a href={officialUrl('pricing_official', '/#pricing')} rel="noopener">
             official pricing page</a>.
         </p>
@@ -85,7 +85,14 @@ const pricingFaq = faq.filter((f) =>
                 <li>{p.domains}</li>
                 <li>{p.migration}</li>
               </ul>
-              <p class="per plan-cta" style="margin:0">{p.install}</p>
+              <p class="per" style="margin:0 0 1.1rem">{p.install}</p>
+              <a
+                class={`btn plan-cta ${p.highlight ? 'btn-primary' : 'btn-secondary'}`}
+                href={p.buyUrl ?? officialUrl('pricing_custom', '/contact')}
+                rel="noopener"
+              >
+                {p.buyUrl ? `Buy ${p.name}` : 'Ask for a quote'}
+              </a>
             </div>
           ))
         }

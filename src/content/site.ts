@@ -68,7 +68,11 @@ export type Package = {
   highlight: boolean;
   /** The badge getclientos.com puts on Standard. */
   note?: string;
+  /** Checkout for this package on app.vibemonk.com. null on Custom, which is quoted. */
+  buyUrl: string | null;
 };
+
+const BUY = 'https://app.vibemonk.com/services/clientos?package=';
 
 export const packages: Package[] = [
   {
@@ -82,6 +86,7 @@ export const packages: Package[] = [
     install: 'You install it yourself — one command.',
     migration: 'CSV import, so you move your own data in',
     highlight: false,
+    buyUrl: `${BUY}start-up`,
   },
   {
     name: 'Standard',
@@ -95,6 +100,7 @@ export const packages: Package[] = [
     migration: 'CSV import, so you move your own data in',
     highlight: true,
     note: 'Most chosen',
+    buyUrl: `${BUY}standard`,
   },
   {
     name: 'Premium',
@@ -107,6 +113,7 @@ export const packages: Package[] = [
     install: 'The ClientOS team deploys and installs it on your server for you.',
     migration: 'Data migration by their team, or a migration tool built for your data',
     highlight: false,
+    buyUrl: `${BUY}premium`,
   },
   {
     name: 'Custom',
@@ -119,6 +126,7 @@ export const packages: Package[] = [
     install: 'Installed for you, with email and payments connected, plus an onboarding call.',
     migration: 'Custom features and integrations for your workflow',
     highlight: false,
+    buyUrl: null,
   },
 ];
 
