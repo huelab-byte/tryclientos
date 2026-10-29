@@ -26,17 +26,36 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install, build and upload the site
-        uses: withastro/action@v3
+      # Not withastro/action: whenever it detects pnpm it calls
+      # pnpm/action-setup with `version: latest`, which clashes with the
+      # `"packageManager": "pnpm@11.5.3"` pin in package.json and fails with
+      # "Multiple versions of pnpm specified". With no `version` input,
+      # pnpm/action-setup reads that pin and nothing else.
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      # Node 24: `pnpm prebuild` runs scripts/build-downloads.mjs, which
+      # imports a .ts data module and so needs type stripping on by default.
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          # `package-manager` is deliberately not set: package.json already
-          # pins `"packageManager": "pnpm@11.5.3"`, and naming a version here
-          # too makes pnpm/action-setup fail with ERR_PNPM_BAD_PM_VERSION.
-          # The action reads the lockfile and that field instead.
-          #
-          # Node 24: `pnpm prebuild` runs scripts/build-downloads.mjs, which
-          # imports a .ts data module and so needs type stripping on by default.
           node-version: 24
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      # `pnpm build` runs the prebuild script first, then astro build.
+      - name: Build
+        run: pnpm build
+
+      - name: Check links
+        run: node scripts/check-links.mjs
+
+      - name: Upload the site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/
 
   deploy:
     needs: build
