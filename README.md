@@ -17,7 +17,7 @@ One-time license. No monthly fee, no per-seat pricing, no cut of your payments.<
 
 <p>
   <img src="https://img.shields.io/badge/self--hosted-your_server-fd4105?style=flat-square" alt="Self-hosted">
-  <img src="https://img.shields.io/badge/license-one--time_from_%24490-fd4105?style=flat-square" alt="One-time license from $490">
+  <img src="https://img.shields.io/badge/license-one--time_from_%24197-fd4105?style=flat-square" alt="One-time license from $197">
   <img src="https://img.shields.io/badge/white--label-100%25-12141c?style=flat-square" alt="100% white-label">
   <img src="https://img.shields.io/badge/clients_%26_staff-unlimited-12141c?style=flat-square" alt="Unlimited clients and staff">
   <img src="https://img.shields.io/badge/runs_on-Ubuntu_%7C_Debian-12141c?style=flat-square&logo=ubuntu&logoColor=white" alt="Runs on Ubuntu or Debian">
@@ -410,15 +410,15 @@ sudo clientos backup     # database, files and settings into one folder
 
 <table>
 <tr>
-<th align="center" width="25%">Start-up</th>
-<th align="center" width="25%">Standard<br><sub>⭐ most chosen</sub></th>
+<th align="center" width="25%">Starter</th>
+<th align="center" width="25%">Standard<br><sub>⭐ most popular</sub></th>
 <th align="center" width="25%">Premium</th>
 <th align="center" width="25%">Custom</th>
 </tr>
 <tr>
-<td align="center"><h2>$490</h2><sub>one-time</sub></td>
-<td align="center"><h2>$990</h2><sub>one-time</sub></td>
-<td align="center"><h2>$1,790</h2><sub>one-time</sub></td>
+<td align="center"><h2>$197</h2><sub>one-time</sub></td>
+<td align="center"><h2>$297</h2><sub>one-time</sub></td>
+<td align="center"><h2>$497</h2><sub>one-time</sub></td>
 <td align="center"><h2>Quoted</h2><sub>contact us</sub></td>
 </tr>
 <tr>
@@ -452,7 +452,7 @@ sudo clientos backup     # database, files and settings into one folder
 <td>Custom features and integrations</td>
 </tr>
 <tr>
-<td align="center"><a href="https://app.vibemonk.com/services/clientos?package=start-up"><img src="https://img.shields.io/badge/Buy_Start--up-12141c?style=for-the-badge" alt="Buy Start--up"></a></td>
+<td align="center"><a href="https://app.vibemonk.com/services/clientos?package=startup"><img src="https://img.shields.io/badge/Buy_Starter-12141c?style=for-the-badge" alt="Buy Starter"></a></td>
 <td align="center"><a href="https://app.vibemonk.com/services/clientos?package=standard"><img src="https://img.shields.io/badge/Buy_Standard-fd4105?style=for-the-badge" alt="Buy Standard"></a></td>
 <td align="center"><a href="https://app.vibemonk.com/services/clientos?package=premium"><img src="https://img.shields.io/badge/Buy_Premium-12141c?style=for-the-badge" alt="Buy Premium"></a></td>
 <td align="center"><a href="https://getclientos.com/contact?utm_source=github&utm_medium=referral&utm_campaign=clientos_launch&utm_content=readme_pricing_custom"><img src="https://img.shields.io/badge/Ask_for_a_quote-12141c?style=for-the-badge" alt="Ask for a quote"></a></td>
@@ -474,7 +474,7 @@ prices below are from each vendor's own pricing page, checked on **29 October 20
 
 | | **ClientOS** | Wayfront (formerly SPP) | Zendo |
 |:--|:--|:--|:--|
-| **How you pay** | Once: [$490](https://app.vibemonk.com/services/clientos?package=start-up) / [$990](https://app.vibemonk.com/services/clientos?package=standard) / [$1,790](https://app.vibemonk.com/services/clientos?package=premium) | $99–$129/mo (Base) · $249–$299/mo (Pro) | $25–$29/mo (Core) · $79–$99/mo (Agency) |
+| **How you pay** | Once: [$197](https://app.vibemonk.com/services/clientos?package=startup) / [$297](https://app.vibemonk.com/services/clientos?package=standard) / [$497](https://app.vibemonk.com/services/clientos?package=premium) | $99–$129/mo (Base) · $249–$299/mo (Pro) | $25–$29/mo (Core) · $79–$99/mo (Agency) |
 | **Seats** | Unlimited staff | 5 on Base, 10 on Pro, then $18–$20 per seat a month | 1 included, then $8–$17 per user a month |
 | **Where your client data lives** | Your own server | The vendor's servers | The vendor's servers |
 | **Crypto payments** | NOWPayments, CoinGate, BTCPay, manual wallets | Not listed | Not listed (Stripe and bank transfer) |
@@ -566,7 +566,7 @@ Lifetime updates come with the Custom package.
 <details>
 <summary><b>Can I move over from my current client portal?</b></summary>
 
-On Start-up and Standard you bring your clients in yourself from a CSV file, with column mapping. On
+On Starter and Standard you bring your clients in yourself from a CSV file, with column mapping. On
 Premium and Custom the ClientOS team moves your data for you, or builds a migration tool for it.
 </details>
 

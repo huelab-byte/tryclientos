@@ -3,12 +3,12 @@ import Base from '../layouts/Base.astro';
 import Cta from '../components/Cta.astro';
 import FaqList from '../components/FaqList.astro';
 import {
-  AUDIT_DATE,
-  AUDIT_DATE_ISO,
   inEveryPackage,
   officialUrl,
   packages,
   pricingFacts,
+  PRICING_DATE,
+  PRICING_DATE_ISO,
   taglines,
 } from '../content/site';
 import { faq } from '../content/faq';
@@ -29,8 +29,8 @@ const pricingFaq = faq.filter((f) =>
 ---
 
 <Base
-  title="ClientOS Pricing: One-Time Licence From $490, No Monthly Fee"
-  description="ClientOS pricing summary: Start-up $490, Standard $990, Premium $1,790 one-time, or a quoted Custom package. One licence per domain, unlimited staff, no per-seat fees."
+  title="ClientOS Pricing: One-Time Licence From $197, No Monthly Fee"
+  description="ClientOS pricing summary: Starter $197, Standard $297, Premium $497 one-time, or a quoted Custom package. One licence per domain, unlimited staff, no per-seat fees."
   og="og/pricing.png"
   crumbs={[{ label: 'Home', href: `${base}/` }, { label: 'Pricing' }]}
   schema={[
@@ -38,8 +38,8 @@ const pricingFaq = faq.filter((f) =>
       url: canonical,
       name: 'ClientOS pricing summary',
       description:
-        'A summary of ClientOS licence pricing as published on getclientos.com, checked 29 October 2026.',
-      modified: AUDIT_DATE_ISO,
+        'A summary of ClientOS licence pricing as published on getclientos.com, checked 9 November 2026.',
+      modified: PRICING_DATE_ISO,
     }),
     softwareApplication(canonical),
     faqPage(pricingFaq),
@@ -63,7 +63,7 @@ const pricingFaq = faq.filter((f) =>
     <div class="wrap">
       <div class="note">
         <p>
-          These are the four packages as published on getclientos.com on {AUDIT_DATE}. Each
+          These are the four packages as published on getclientos.com on {PRICING_DATE}. Each
           <strong>Buy</strong> button opens that package’s checkout on vibemonk.com, ClientOS’s
           maker; the current numbers are always on the
           <a href={officialUrl('pricing_official', '/#pricing')} rel="noopener">
@@ -121,7 +121,7 @@ const pricingFaq = faq.filter((f) =>
         <table>
           <caption>
             Cost of running a self-hosted ClientOS. Licence prices and the server estimate are from
-            getclientos.com, checked {AUDIT_DATE}; third-party costs depend on your own accounts and
+            getclientos.com, checked {PRICING_DATE}; third-party costs depend on your own accounts and
             are not set by ClientOS.
           </caption>
           <thead>
@@ -134,7 +134,7 @@ const pricingFaq = faq.filter((f) =>
           <tbody>
             <tr>
               <th scope="row">The ClientOS licence</th>
-              <td>$490, $990 or $1,790 once, or quoted</td>
+              <td>$197, $297 or $497 once, or quoted</td>
               <td>ClientOS (Vibemonk), once per domain</td>
             </tr>
             <tr>
@@ -178,7 +178,7 @@ const pricingFaq = faq.filter((f) =>
       <div class="note">
         <p>
           <strong>One asterisk worth reading.</strong> Updates are time-limited on every package
-          except Custom: 3 months on Start-up, 12 on Standard, 2 years on Premium. getclientos.com
+          except Custom: 3 months on Starter, 12 on Standard, 2 years on Premium. getclientos.com
           states that when they end, ClientOS keeps running on the version you have and you can
           renew for newer releases — but it does not publish a renewal price. If long-term update
           costs matter to your decision, ask them before you buy.

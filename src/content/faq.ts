@@ -21,7 +21,7 @@ export const faq: FaqItem[] = [
   },
   {
     q: 'How much does ClientOS cost?',
-    a: 'It is a one-time licence, one per domain: Start-up $490 with 3 months of updates, Standard $990 with 12 months, Premium $1,790 with 2 years and two agency licences, and a quoted Custom package with lifetime updates. There is no monthly fee, no per-seat pricing and no cut of your payments. Your only running cost is the server, which the site puts at about $10 a month.',
+    a: 'It is a one-time licence, one per domain: Starter $197 with 3 months of updates, Standard $297 with 12 months, Premium $497 with 2 years and two agency licences, and a quoted Custom package with lifetime updates. There is no monthly fee, no per-seat pricing and no cut of your payments. Your only running cost is the server, which the site puts at about $10 a month.',
     source: 'getclientos.com #pricing',
   },
   {
@@ -46,7 +46,7 @@ export const faq: FaqItem[] = [
   },
   {
     q: 'Can I move over from my current client portal?',
-    a: 'On Start-up and Standard you bring your clients in yourself from a CSV file, with column mapping. On Premium and Custom the ClientOS team moves your data for you, or builds a migration tool for it. Their published Dot Mirror case study describes a Wayfront importer bringing over clients, orders, messages, invoices and files.',
+    a: 'On Starter and Standard you bring your clients in yourself from a CSV file, with column mapping. On Premium and Custom the ClientOS team moves your data for you, or builds a migration tool for it. Their published Dot Mirror case study describes a Wayfront importer bringing over clients, orders, messages, invoices and files.',
     source: 'getclientos.com FAQ and the Dot Mirror case study',
   },
   {
@@ -76,7 +76,7 @@ export const faq: FaqItem[] = [
   },
   {
     q: 'How many clients and staff can I have?',
-    a: 'Every package states unlimited clients, staff and orders. The licence is counted per domain, not per seat: Start-up and Standard cover one agency, Premium covers two, and each extra install is its own licence.',
+    a: 'Every package states unlimited clients, staff and orders. The licence is counted per domain, not per seat: Starter and Standard cover one agency, Premium covers two, and each extra install is its own licence.',
     source: 'getclientos.com #pricing',
   },
   {

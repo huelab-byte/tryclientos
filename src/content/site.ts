@@ -10,6 +10,10 @@
 export const AUDIT_DATE = '29 October 2026';
 export const AUDIT_DATE_ISO = '2026-10-29';
 
+/** When the package prices below were last re-read off getclientos.com. */
+export const PRICING_DATE = '9 November 2026';
+export const PRICING_DATE_ISO = '2026-11-09';
+
 export const site = {
   name: 'Self-Hosted Client Portals',
   repo: 'https://github.com/huelab-byte/tryclientos',
@@ -48,8 +52,8 @@ export function officialUrl(utmContent: string, path = ''): string {
 }
 
 // ---------------------------------------------------------------------------
-// Pricing — getclientos.com/#pricing, cross-checked against the homepage
-// JSON-LD `offers` (490 / 990 / 1790 USD).
+// Pricing — getclientos.com/#pricing and getclientos.com/pricing, re-checked
+// 9 November 2026 (Starter $197 / Standard $297 / Premium $497 USD).
 // ---------------------------------------------------------------------------
 
 export type Package = {
@@ -74,9 +78,9 @@ const BUY = 'https://app.vibemonk.com/services/clientos?package=';
 
 export const packages: Package[] = [
   {
-    name: 'Start-up',
-    price: '$490',
-    priceNumber: 490,
+    name: 'Starter',
+    price: '$197',
+    priceNumber: 197,
     period: 'one-time',
     updates: '3 months of updates',
     support: 'Standard support',
@@ -84,12 +88,12 @@ export const packages: Package[] = [
     install: 'You install it yourself — one command.',
     migration: 'CSV import, so you move your own data in',
     highlight: false,
-    buyUrl: `${BUY}start-up`,
+    buyUrl: `${BUY}startup`,
   },
   {
     name: 'Standard',
-    price: '$990',
-    priceNumber: 990,
+    price: '$297',
+    priceNumber: 297,
     period: 'one-time',
     updates: '12 months of updates',
     support: 'Priority support',
@@ -97,13 +101,13 @@ export const packages: Package[] = [
     install: 'You install it yourself — one command.',
     migration: 'CSV import, so you move your own data in',
     highlight: true,
-    note: 'Most chosen',
+    note: 'Most Popular',
     buyUrl: `${BUY}standard`,
   },
   {
     name: 'Premium',
-    price: '$1,790',
-    priceNumber: 1790,
+    price: '$497',
+    priceNumber: 497,
     period: 'one-time',
     updates: '2 years of updates',
     support: 'Priority support',

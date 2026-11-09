@@ -119,7 +119,7 @@ export const alternatives: Alternative[] = [
         dimension: 'What you pay',
         them: 'A monthly subscription: $99–$129/mo on Base, $249–$299/mo on Pro, plus $18–$20 per extra seat and $240–$300/mo if you need the API.',
         clientos:
-          'A one-time licence per domain: $490, $990 or $1,790, or quoted. Plus a server, which the site puts at about $10 a month.',
+          'A one-time licence per domain: $197, $297 or $497, or quoted. Plus a server, which the site puts at about $10 a month.',
       },
       {
         dimension: 'Where client data lives',
@@ -186,9 +186,9 @@ export const alternatives: Alternative[] = [
         'The only honest way to compare a subscription with a one-time licence is over time. Wayfront’s own yearly Pro price against the ClientOS Premium licence, server excluded on both sides:',
       theirLabel: 'Wayfront Pro, billed yearly, 10 seats',
       theirYearly: 2988,
-      ours: { label: 'ClientOS Premium, one-time', price: 1790 },
+      ours: { label: 'ClientOS Premium, one-time', price: 497 },
       footnote:
-        'Wayfront Pro at its yearly rate of $249/mo = $2,988 a year for the 10 seats included, with no extra seats and no API add-on; list prices read from wayfront.com/pricing on 29 October 2026. ClientOS Premium is $1,790 once and includes 2 years of updates; after those, it keeps running on the version you hold. Neither column includes your own server (about $10 a month) or your payment-gateway fees, which you pay either way. ClientOS publishes a case study making a near-identical calculation for one agency; the figures above are recomputed here from both vendors’ own list prices.',
+        'Wayfront Pro at its yearly rate of $249/mo = $2,988 a year for the 10 seats included, with no extra seats and no API add-on; list prices read from wayfront.com/pricing on 29 October 2026. ClientOS Premium is $497 once and includes 2 years of updates; after those, it keeps running on the version you hold. Neither column includes your own server (about $10 a month) or your payment-gateway fees, which you pay either way. ClientOS publishes a case study making a near-identical calculation for one agency; the figures above are recomputed here from both vendors’ own list prices.',
     },
     keywords:
       'wayfront alternative, service provider pro alternative, spp alternative, spp.co alternative, self hosted wayfront alternative',
@@ -213,7 +213,7 @@ export const alternatives: Alternative[] = [
       'Zendo and ClientOS both sell the same promise: a storefront for your services, a place for the client to order and talk to you, and quotes and invoices at the end of it. Zendo starts free and is hosted for you; ClientOS is a one-time licence you install on your own server. The sharpest practical differences are per-user pricing and what each one does about payments.',
     stayWithThem: [
       'You are starting out and want to spend nothing. Zendo’s Essential plan is free for 3 clients and 1 published service; ClientOS has no free tier.',
-      'You are one person. Zendo’s plans include one internal user, which is cheap for a solo operator; ClientOS prices per domain, not per seat, so it is poor value for one person and good value for a team.',
+      'You are one person. Zendo’s plans include one internal user, which is cheap for a solo operator; ClientOS prices per domain, not per seat, so the advantage grows with every person you add.',
       'You need the interface in Danish, Dutch, Finnish, French, German, Italian, Norwegian, Polish, Portuguese, Spanish or Swedish. Zendo lists twelve interface languages; ClientOS states English only.',
       'You want Zapier, Rewardful or embedded third-party apps, which Zendo lists from its Pro plan.',
       'You would rather not run a server at all.',
@@ -255,7 +255,7 @@ export const alternatives: Alternative[] = [
         dimension: 'What you pay',
         them: 'Free, or $25–$79/mo yearly ($29–$99 monthly), each plan including one internal user, with extra users at $8, $12.50 or $17 a month.',
         clientos:
-          'A one-time licence per domain: $490, $990 or $1,790, or quoted — with unlimited staff. Plus a server, about $10 a month.',
+          'A one-time licence per domain: $197, $297 or $497, or quoted — with unlimited staff. Plus a server, about $10 a month.',
       },
       {
         dimension: 'Where client data lives',
@@ -314,9 +314,9 @@ export const alternatives: Alternative[] = [
         'Zendo’s per-seat pricing is what decides this one. A five-person team on Zendo’s Pro plan — one user included, four extra at $12.50 — against the ClientOS Standard licence:',
       theirLabel: 'Zendo Pro, yearly rate, 5 internal users',
       theirYearly: 1188,
-      ours: { label: 'ClientOS Standard, one-time', price: 990 },
+      ours: { label: 'ClientOS Standard, one-time', price: 297 },
       footnote:
-        'Zendo Pro at its yearly rate of $49/mo, plus four extra internal users at $12.50/mo each = $99/mo = $1,188 a year; list prices read from getzendo.io/pricing on 29 October 2026. ClientOS Standard is $990 once and includes 12 months of updates and unlimited staff; after those, it keeps running on the version you hold. Neither column includes your own server (about $10 a month). A solo operator reverses this comparison: Zendo Pro alone is $588 a year, and its Essential plan is free.',
+        'Zendo Pro at its yearly rate of $49/mo, plus four extra internal users at $12.50/mo each = $99/mo = $1,188 a year; list prices read from getzendo.io/pricing on 29 October 2026. ClientOS Standard is $297 once and includes 12 months of updates and unlimited staff; after those, it keeps running on the version you hold. Neither column includes your own server (about $10 a month). For a solo operator the gap narrows: Zendo Pro alone is $588 a year, and its Essential plan is free.',
     },
     keywords: 'zendo alternative, zendo alternatives, getzendo alternative, self hosted zendo alternative',
   },
@@ -356,7 +356,7 @@ export const alternatives: Alternative[] = [
         dimension: 'The model',
         them: 'Hosted SaaS: the vendor runs the servers and bills you monthly or annually.',
         clientos:
-          'A one-time licence per domain, installed on a Linux VPS you rent. $490, $990 or $1,790, or quoted, plus a server at about $10 a month.',
+          'A one-time licence per domain, installed on a Linux VPS you rent. $197, $297 or $497, or quoted, plus a server at about $10 a month.',
       },
       {
         dimension: 'Where client data lives',

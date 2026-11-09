@@ -182,7 +182,7 @@ const cards = [
   {
     name: 'pricing.png',
     eyebrow: 'Pricing',
-    title: 'Pay once. Own it. From $490, no monthly fee.',
+    title: 'Pay once. Own it. From $197, no monthly fee.',
     footer: FOOT,
   },
   {
